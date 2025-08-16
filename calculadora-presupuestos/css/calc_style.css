@@ -1,0 +1,366 @@
+select{
+	-webkit-appearance: listbox !important
+}
+.form-control:focus {
+	border-color: #ccc;
+	box-shadow: none;
+}
+img.variacion {
+	width: 42px!important;
+	border: 3px solid #fff;
+}
+.paso2, .paso3, .paso4, .paso5, .paso6, .paso7 {
+	display: none;
+}
+.cuadro_select {
+  height: 50px;
+  border: 1px solid #ccc;
+  text-align: center;
+  line-height: 50px;
+}
+.cuadro_select:hover {
+	cursor: pointer;
+}
+.slider {
+	-webkit-appearance: none;
+	width: 100%;
+	height: 25px;
+	background: #d3d3d3;
+	outline: none;
+	opacity: 0.7;
+	-webkit-transition: .2s;
+	transition: opacity .2s;
+}
+.slider:hover {
+	opacity: 1;
+}
+.slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 25px;
+	height: 25px;
+	background: #35471e;
+	cursor: pointer;
+}
+.slider::-moz-range-thumb {
+	width: 25px;
+	height: 25px;
+	background: #35471e;
+	cursor: pointer;
+}
+.metros2 {
+  width: 100%;
+  display: inline-block;
+  font-size: 40px;
+  font-weight: 500;
+  margin-bottom: 14px;
+  text-align: center;
+  color: #fff;
+  background-color: #92bf23;
+}
+.num_metros {
+	width: 47%;
+	display: inline-block;
+	text-align: right;
+}
+.m2 {
+	width: 47%!important;
+	display: inline-block;
+	text-align: left;
+}
+.microcemento_cta.pres, .pintura_cta.pres {
+  padding: 3px 0px;
+  width: 100%!important;
+}
+.item.n1.gris:hover {
+  filter: grayscale(20%);
+  opacity: 0.8;
+}
+.sel_mat .item.gris:hover {
+  filter: grayscale(20%);
+  opacity: 0.8;
+  cursor: pointer;
+}
+.sel_mat .img-circ h3 {
+  font-size: 16px!important;
+  color: #fff;
+  margin: 4px;
+}
+.calculadora .img-circ h3 {
+  font-size: 16px!important;
+  color: #fff;
+  margin: 4px;
+}
+button.microcemento_cta.calcular {
+  width: 100%!important;
+  margin-top: 30px;
+  padding: 18px 10px;
+  font-size: 17px;
+}
+button.microcemento_cta.calcular i {
+    margin-left: 20px;
+}
+#form_calculadora {
+    border-right: 2px dotted #35471e;
+    padding-right: 50px;
+}
+.calculadora h2 {
+    margin: 25px 0;
+    margin-bottom: 20px;
+    font-size: 18px!important;
+    text-align: left;
+}
+h2.tit_pr {
+    text-align: center;
+    font-size: 30px!important;
+}
+.calculadora select {
+    height: 50px;
+    text-align: center;
+    font-size: 17px;
+}
+.calculadora .container.img-circ {
+    margin-bottom: 8%;
+}
+span.tit_color {
+    background-color: rgba(256,256,256,0.5);
+    padding: 3px 5px;
+    color: #000;
+    font-weight: 500;
+    font-size: 16px;
+}
+.sel_color .color {
+	display: inline;
+}
+#form_calculadora {
+	display: none;
+}
+.calculadora-imagen-fondo {
+  height: 200px;
+  background-image: url(../img/smartcret_contacto.jpg);
+  background-color: rgba(0, 0, 0, .7) !important;
+  background-position-y: center;
+  background-position: center;
+}
+.calculadora-imagen-fondo h1 {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 200px;
+}
+#resultado_presupuesto {
+	display: none;
+	padding-left: 5%;
+}
+h2.pres {
+    font-size: 20px!important;
+    margin-bottom: 40px;
+    line-height: 28px;
+}
+.calculadora table.carrito .desc {
+    text-align: left;
+    font-size: 15px;
+    line-height: 17px;
+}
+.calculadora button.palcarrito {
+  width: auto!important;
+  font-size: 16px;
+  position: relative;
+  margin-top: 30px;
+  float: right;
+}
+.calculadora button.palcarrito i {
+    margin-right: 15px;
+}
+td.total_importe {
+  text-align: right;
+  height: 60px;
+  padding-top: 14px!important;
+  font-size: 21px;
+  font-weight: 500;
+}
+button.microcemento_cta.calcular:focus {
+  outline: none!important;
+}
+button.delete {
+  border: 1px solid #e9b1b1;
+  color: #e9b1b1;
+  padding: 3px 10px 4px;
+  background-color: transparent;
+  margin-top: 30px;
+}
+button.delete:hover {
+  border: 1px solid #df6060;
+  background: #df6060;
+  color: #fff;
+}
+button.delete:focus {
+  outline: none;
+}
+.procesando {
+  display: none;
+  position: fixed;
+  background-color: rgba(256,256,256,0.7);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999999;
+}
+.procesando img {
+  width: 3%;
+  position: absolute;
+  top: 50%;
+  left: 56%;
+  transform: translate(-50%, -50%);
+}
+.blq_calcula {
+  position: relative;
+}
+.no-scroll {
+	overflow: hidden;
+}
+.linea_total {
+  background-color: #f6fbea;
+}
+.select_color {
+  background-position: center;
+}
+.item.selected {
+  border: 3px solid #92bf23;
+  transform: scale(1.3);
+  background-color: #fff!important;
+  z-index: 9;
+}
+option {
+  text-align: left!important;
+}
+
+
+.metros2 {
+    width: 100%;
+    display: inline-block;
+    font-size: 40px;
+    font-weight: 500;
+    margin-bottom: 14px;
+    text-align: center;
+    color: #fff;
+    background-color: #92bf23;
+    height: 80px;
+    padding-top: 10px;
+}
+.num_metros {
+    width: 57%;
+    display: inline-block;
+    text-align: right;
+}
+input.input_num {
+    width: 105%;
+    height: 50%;
+    background-color: #fff;
+    border: 1px solid #fff;
+    text-align: right;
+    padding-right: 0px;
+    font-weight: 500;
+    color: #35471e;
+}
+.m2 {
+    width: 17%!important;
+    display: inline-block;
+    text-align: left;
+    margin-left: 5px;
+    color: #35471e;
+}
+input.input_num {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
+
+
+@media (max-width: 768px) {
+
+.calculadora-imagen-fondo h1 {
+  font-size: 30px;
+  line-height: 30px;
+  text-align: center;
+  padding-top: 7%;
+}
+.calculadora-imagen-fondo {
+    height: 120px;
+}
+.calculadora h2 {
+    margin-top: 26px;
+    margin-bottom: 15px;
+    text-align: left;
+    font-size: 18px!important;
+    line-height: 22px;
+}
+.sel_mat .item {
+    margin-bottom: 26px;
+}
+.item.selected {
+    border: none;
+    background-color: #fff!important;
+    z-index: 9;
+    width: 75%;
+    margin: 0 auto;
+}
+.row.calcula {
+    display: flex;
+    justify-content: space-around;
+}
+#form_calculadora {
+    border-right: none;
+    padding-right: 0;
+}
+#form_calculadora {
+    margin-top: 10%;
+    border-right: none;
+    padding-right: 0;
+}
+h2.tit_pr {
+    text-align: center;
+    font-size: 26px!important;
+}
+#resultado_presupuesto .table.carrito .datos img {
+    height: 60px;
+    width: auto;
+}
+.calculadora table.carrito .desc {
+    text-align: left;
+    font-size: 13px;
+    line-height: 15px;
+}
+#resultado_presupuesto .table.carrito tr.datos td {
+    min-width: 40px;
+}
+#resultado_presupuesto .table.carrito .datos img {
+    height: 50px;
+    width: auto;
+    display: block;
+}
+form#form-datos {
+    padding-right: 10px;
+}
+button.delete {
+    font-size: 14px;
+    border: 1px solid #ef9494;
+    color: #ef9494;
+}
+.calculadora button.palcarrito {
+    font-size: 16px;
+    position: relative;
+    margin-top: 30px;
+    float: none;
+    width: 100%!important;
+}
+
+
+
+
+
+}

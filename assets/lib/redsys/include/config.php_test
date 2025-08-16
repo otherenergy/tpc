@@ -1,0 +1,108 @@
+<?php
+
+$test = true;
+
+
+if ( $test ) {
+
+/* PRUEBA */
+
+// URL de REDSYS con el formulario de procesamiento de pagos (TEST / REAL)
+define( 'REDSYS_URL_TPV', 'https://sis-t.redsys.es:25443/sis/realizarPago' ); #test
+
+// Clave secreta de encriptación (SHA-256)
+define( 'REDSYS_KEYCODE', 'sq7HjrUOBfKmC576ILgskD5srU870gJ7' ); #test
+
+}else {
+
+/* PRODUCCION */
+
+// URL de REDSYS con el formulario de procesamiento de pagos (TEST / REAL)
+define( 'REDSYS_URL_TPV', 'https://sis.redsys.es/sis/realizarPago' );//bueno
+
+// Clave secreta de encriptación (SHA-256)
+define( 'REDSYS_KEYCODE', 'ZOKo/OvgRRFUC16N1/Mzj0P7a052ZdI3' );//bueno
+}
+
+// Nombre del comercio
+define( 'REDSYS_NAME', 'Smartcret' );
+
+// Número de comercio (FUC)
+define( 'REDSYS_FUC_CODE', '351939194' );
+
+// Número de terminal
+define( 'REDSYS_TERMINAL', '001');
+
+// Código de divisa
+define( 'REDSYS_CURRENCY', '978');
+
+
+// URL de vuelta en operaciones de pago con éxito (por defecto)
+
+switch ( $idioma ) {
+
+	case 'ES':
+
+		// URL para la recepción de confirmaciones de pago
+		define( 'REDSYS_URL_MERCHANT', 'https://www.smartcret.com/assets/return/notifica.php?lang=es');
+		// define( 'REDSYS_URL_MERCHANT', 'localhost/smartcret/assets/return/notifica.php?lang=es');
+
+		define( 'REDSYS_URL_OK', 'https://www.smartcret.com/pedido-finalizado?from=tpv');
+		// define( 'REDSYS_URL_OK', 'localhost/smartcret/pedido-finalizado?from=tpv');
+
+		define( 'REDSYS_URL_KO', 'https://www.smartcret.com/error-pago');
+		// define( 'REDSYS_URL_KO', 'localhost/smartcret/error-pago');
+
+		break;
+
+	case 'EN':
+
+		// URL para la recepción de confirmaciones de pago
+		define( 'REDSYS_URL_MERCHANT', 'https://www.smartcret.com/assets/return/notifica.php?lang=en');
+		// define( 'REDSYS_URL_MERCHANT', 'localhost/smartcret/assets/return/notifica.php?lang=en');
+
+		define( 'REDSYS_URL_OK', 'https://www.smartcret.com/en/order-completed?from=tpv');
+		// define( 'REDSYS_URL_OK', 'localhost/smartcret/en/order-completed?from=tpv');
+
+		define( 'REDSYS_URL_KO', 'https://www.smartcret.com/en/payment-error');
+		// define( 'REDSYS_URL_KO', 'localhost/smartcret/en/payment-error');
+
+		break;
+
+	case 'FR':
+
+		// URL para la recepción de confirmaciones de pago
+		define( 'REDSYS_URL_MERCHANT', 'https://www.smartcret.com/assets/return/notifica.php?lang=fr');
+		// define( 'REDSYS_URL_MERCHANT', 'localhost/smartcret/assets/return/notifica.php?lang=fr');
+
+		define( 'REDSYS_URL_OK', 'https://www.smartcret.com/fr/commande-completee?from=tpv');
+		// define( 'REDSYS_URL_OK', 'localhost/smartcret/fr/commande-completee?from=tpv');
+
+		define( 'REDSYS_URL_KO', 'https://www.smartcret.com/fr/erreur-paiement');
+		// define( 'REDSYS_URL_KO', 'localhost/smartcret/fr/erreur-paiement');
+
+		break;
+
+	case 'IT':
+
+		// URL para la recepción de confirmaciones de pago
+		define( 'REDSYS_URL_MERCHANT', 'https://www.smartcret.com/assets/return/notifica.php?lang=it');
+		// define( 'REDSYS_URL_MERCHANT', 'localhost/smartcret/assets/return/notifica.php?lang=it');
+
+		define( 'REDSYS_URL_OK', 'https://www.smartcret.com/it/ordine-completato.php?from=tpv');
+		// define( 'REDSYS_URL_OK', 'localhost/smartcret/it/ordine-completato.php?from=tpv');
+
+		define( 'REDSYS_URL_KO', 'https://www.smartcret.com/it/errore-pagamento');
+		// define( 'REDSYS_URL_KO', 'localhost/smartcret/it/errore-pagamento');
+
+		break;
+
+	default:
+		break;
+}
+
+// Indica si se debe escribir información en el log sobre las operaciones de confirmación procesadas
+define( 'REDSYS_LOG', true );
+
+//Ds_SignatureVersion
+define( 'VERSION', 'HMAC_SHA256_V1' );

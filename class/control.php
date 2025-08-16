@@ -1,0 +1,1533 @@
+<?php
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+if (session_status() === PHP_SESSION_NONE) {
+	session_start();
+}
+
+require(dirname(__DIR__) . "/config/db_connect.php");
+require(__DIR__ . "/class/class.carrito.php");
+require(__DIR__ . "/userClass.php");
+require(__DIR__ . "/checkoutClass.php");
+require(__DIR__ . "/emailClass.php");
+require(__DIR__ . "/portes.php");
+require(dirname(__DIR__) . "/assets/lib/funciones.php");
+
+$id_idioma_global = $_SESSION['id_idioma'];
+$id_idioma = $id_idioma_global;
+
+require(dirname(__DIR__) . "/includes/vocabulario.php");
+
+if (isset($_REQUEST['accion']) && $_REQUEST['accion'] != '') {
+	$post_keys = array_keys($_REQUEST);
+	foreach ($post_keys as $key) {
+		$$key = $_REQUEST[$key];
+	}
+}
+
+$checkout = new Checkout();
+$userClass = new userClass();
+$portes = new portes();
+
+$db = getDB();
+$resp = array();
+
+switch ($accion) {
+
+	case 'set_metodo_pago':
+		$_SESSION['smart_user']['metodo_pago'] = $metPago;
+		break;
+
+	case 'lista_sesion':
+		var_dump($_SESSION);
+		break;
+
+	case 'borra_sesion':
+		$_SESSION = array();
+		break;
+
+	case 'login':
+		$pass = hash('sha256', $input_pass);
+
+		$sql = "SELECT * FROM users WHERE email=? AND eliminado=0";
+		$arguments = [$input_email];
+
+		try {
+			$results = $checkout->executeSelectObj($sql, $arguments);
+		} catch (\PDOException $e) {
+			echo "Error: " . $e->getMessage();
+		}
+
+		if (count($results) > 0) {
+			$reg = $results[0];
+
+			if ($reg->activo == 0) {
+				$resp['res'] = "0";
+				$resp['msg'] = $vocabulario_cuenta_desactivada;
+			}
+			if ($reg->password !== $pass) {
+				if($reg->login_fallidos < 5) {
+					$sql = "UPDATE users SET login_fallidos = login_fallidos + 1 WHERE email=?";
+					$arguments = [$input_email];
+
+					$res = $checkout->executeUpdate($sql, $arguments);
+
+					$resp['res'] = "0";
+					$resp['msg'] = $vocabulario_datos_no_coinciden_con_usuario;
+					if($reg->login_fallidos == 2) {
+						$resp['msg'] = $vocabulario_avisar_intentos_fallidos;
+					}
+				}else{
+					$sql = "UPDATE users SET activo=0 WHERE email=?";
+					$arguments = [$input_email];
+
+					$res = $checkout->executeUpdate($sql, $arguments);
+					$resp['res'] = "0";
+					$resp['msg'] = $vocabulario_cuenta_desactivada;
+				}
+			}else{
+				$sql = "UPDATE users SET login_fallidos = 0 WHERE email=?";
+				$arguments = [$input_email];
+
+				$res = $checkout->executeUpdate($sql, $arguments);
+
+				$_SESSION['smart_user']['id'] = $reg->uid;
+				$_SESSION['smart_user']['nombre'] = $reg->nombre;
+				$_SESSION['smart_user']['email'] = $reg->email;
+				$_SESSION['smart_user']['distribuidor'] = $reg->distribuidor;
+				$_SESSION['smart_user']['login'] = 1;
+				// $_SESSION['user_ubicacion'] = $reg->ubicacion;
+			  	// $_SESSION['user_idioma'] = $reg->idioma;
+
+				if ($reg->idioma != 0) $_SESSION['smart_user']['lang'] = 1;
+
+				$resp['res'] = "1";
+				$resp['msg'] = $vocabulario_hola . " " . $reg->nombre . " " . $vocabulario_bienvenido_a_smartcret;
+			}
+
+		} else {
+			$resp['res'] = "0";
+			$resp['msg'] = $vocabulario_datos_no_coinciden_con_usuario;
+		}
+
+		echo json_encode($resp);
+
+		break;
+
+	case 'login_google' :
+
+		$email = $emailgoogle;
+		$nombre = $namegoogle;
+		$existe = existeEmail($email); // false si existe
+
+		$usuario = null;
+		if(!existeEmail($email)) {
+
+			$sql = "SELECT * FROM users WHERE email=? AND eliminado=0";
+			$arguments = [$email];
+
+			try {
+				$results = $checkout->executeSelectObj($sql, $arguments);
+			} catch (\PDOException $e) {
+				echo "Error: " . $e->getMessage();
+			}
+
+			if (count($results) > 0) {
+				$usuario = $results[0];
+
+				$_SESSION['smart_user']['id'] = $usuario->uid;
+				$_SESSION['smart_user']['nombre'] = $usuario->nombre;
+				$_SESSION['smart_user']['email'] = $usuario->email;
+				$_SESSION['smart_user']['login'] = 1;
+
+				if ($usuario->idioma != 0) $_SESSION['smart_user']['lang'] = 1;
+
+				$resp['res'] = "1";
+				$resp['msg'] = $vocabulario_hola . " " . $reg->nombre . " " . $vocabulario_bienvenido_a_smartcret;
+				$resp['srv'] = $_ENV['RUTA_SERVER'];
+			}else{
+				$resp['res'] = "0";
+				$resp['srv'] = $_ENV['RUTA_SERVER'];
+				$resp['msg'] = $vocabulario_datos_no_coinciden_con_usuario;
+			}
+		}else{
+
+			$permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			$pass_ficticio = substr(str_shuffle($permitted_chars), 0, 64);
+
+			$valores = "";
+			$valores .= "username=?";
+			$valores .= ", nombre=?";
+			$valores .= ", email=?";
+			$valores .= ", fecha_alta=?";
+			$valores .= ", fecha_actualizacion=?";
+			$valores .= ", password=?";
+
+			$sql = "INSERT INTO users SET $valores";
+			$arguments = [
+				$namegoogle,
+				$namegoogle,
+				$email,
+				date('Y-m-d H:i:s'),
+				date('Y-m-d H:i:s'),
+				hash('sha256', $pass_ficticio)
+			];
+			$id_usuario = $checkout->executeInsert($sql, $arguments);
+
+			if ($id_usuario > 0) {
+
+				$_SESSION['smart_user']['id'] = $id_usuario;
+				$_SESSION['smart_user']['nombre'] = $namegoogle;
+				$_SESSION['smart_user']['email'] = $email;
+				$_SESSION['smart_user']['login'] = 1;
+
+				$resp['res'] = "1";
+				$resp['msg'] = $vocabulario_bienvenido . " " . $input_nombre . "!!! " . $vocabulario_formas_parte_de_smartcret;
+				$resp['srv'] = $_ENV['RUTA_SERVER'];
+			}
+		}
+
+		echo json_encode($resp);
+
+		break;
+
+	case 'registro':
+
+		$emailClass = new emailClass;
+
+		try {
+			if (existeEmail($input_email)) {
+				$valores = "";
+				$valores .= "username=?";
+				$valores .= ", nombre=?";
+				$valores .= ", email=?";
+				$valores .= ", fecha_alta=?";
+				$valores .= ", fecha_actualizacion=?";
+				$valores .= ", password=?";
+				$valores .= ", activo=?";
+
+				$sql = "INSERT INTO users SET $valores";
+				$arguments = [
+					strtolower(str_replace(' ', '_', $input_nombre)),
+					$checkout->custom_real_escape_string($input_nombre),
+					$input_email,
+					date('Y-m-d H:i:s'),
+					date('Y-m-d H:i:s'),
+					hash('sha256', $input_pass),
+					0
+				];
+
+				$id_usuario = $checkout->executeInsert($sql, $arguments);
+
+				if ($id_usuario > 0) {
+					$email = $input_email;
+					$nombre = $input_nombre;
+					$pass = hash('sha256', $input_pass);
+
+					$emailClass->email_registro($id_idioma, $email, $nombre, $pass);
+
+					$resp['res'] = "1";
+					$resp['msg'] = $vocabulario_bienvenido_a_smartcret . " " . $input_nombre . "!!! " . $vocabulario_revisa_email_activar_cuenta;
+					// $resp['msg'] = $vocabulario_bienvenido_a_smartcret . " " . $input_nombre . "!!! ";
+
+				} else {
+					$resp['res'] = "0";
+					$resp['msg'] = $vocabulario_registro_no_completado_contacte_con_smartcret;
+				}
+			} else {
+				// echo $vocabulario_no_es_posible_realizar_registro;
+				$resp['res'] = "0";
+				$resp['msg'] = $vocabulario_no_es_posible_realizar_registro . " " . $input_email . " " . $vocabulario_ya_esta_siendo_utilizado;
+			}
+		} catch (\PDOException $e) {
+			$resp['res'] = "0";
+			$resp['msg'] = "Error: " . $e->getMessage();
+		} catch (\Exception $e) {
+			$resp['res'] = "0";
+			$resp['msg'] = "Error: " . $e->getMessage();
+		}
+
+		echo json_encode($resp);
+
+		break;
+
+	case 'activar_cuenta':
+
+		$sql = "UPDATE users SET activo=1 WHERE email=? AND password=?";
+		$arguments = [$email, $reset];
+		$res = $checkout->executeUpdate($sql, $arguments);
+
+		if ($res != 0 ) {
+			$resp['res'] = "1";
+			$resp['msg'] = $vocabulario_bienvenido . " " . $input_nombre . "!!! " . $vocabulario_formas_parte_de_smartcret;
+		} else {
+			$resp['res'] = "0";
+			$resp['msg'] = $vocabulario_datos_no_coinciden_con_usuario;
+		}
+
+		echo json_encode($resp);
+
+		break;
+
+	case 'logout':
+
+		$resp['msg'] = $vocabulario_gracias_por_tu_visita . " " . $_SESSION['smart_user']['nombre'] . " " . $vocabulario_esperemos_que_regreses_prontos;
+
+		// session_destroy();
+		$_SESSION['smart_user'] = array();
+		echo json_encode($resp);
+
+		break;
+
+
+	case 'elimina_direccion':
+		$sql = "UPDATE $tipo_direccion SET activo=0 WHERE id=?";
+		$arguments = [$id];
+		$res = $checkout->executeUpdate($sql, $arguments);
+
+		if ($res != 0 ) {
+			$resp['res'] = "1";
+			$resp['msg'] = $vocabulario_se_ha_eliminado_direccion;
+		} else {
+			$resp['res'] = "0";
+			$resp['msg'] = $vocabulario_error_no_posible_eliminar_direccion;
+		}
+
+		echo json_encode($resp);
+		break;
+
+	case 'recupera_pass':
+
+		$emailClass = new emailClass;
+
+		$sql = "SELECT nombre, email, password FROM users WHERE email=?";
+		$arguments = [$input_email];
+
+		try {
+			$results = $checkout->executeSelectObj($sql, $arguments);
+
+
+			if (count($results) == 0) {
+				$resp['res'] = "0";
+				$resp['msg'] = $vocabulario_direccion_correo_no_coincide;
+			} else {
+				$reg = $results[0];
+				$nombre = $reg->nombre;
+				$email = $reg->email;
+				$pass = $reg->password;
+
+				$emailClass->email_recuperar_pass($id_idioma, $email, $nombre, $pass);
+
+				$resp['res'] = "1";
+				$resp['msg'] = $vocabulario_hemos_enviado_email_con_instrucciones_para_resetear_contraseña;
+			}
+		} catch (\PDOException $e) {
+			$resp['res'] = "0";
+			$resp['msg'] = "Error: " . $e->getMessage();
+		} catch (\Exception $e) {
+			$resp['res'] = "0";
+			$resp['msg'] = "Error: " . $e->getMessage();
+		}
+
+		echo json_encode($resp);
+
+		break;
+
+	case 'nueva_dir_envios':
+
+		$reg = $checkout->obten_datos_user($_SESSION['smart_user']['id'])[0];
+
+		$valores = "";
+		$valores .= "id_cliente= ?";
+		$valores .= ", nombre= ?";
+		$valores .= ", apellidos= ?";
+		$valores .= ", email= ?";
+		$valores .= ", telefono= ?";
+		$valores .= ", direccion= ?";
+		$valores .= ", cp= ?";
+		$valores .= ", localidad= ?";
+		$valores .= ", provincia= ?";
+		$valores .= ", pais= ?";
+		$valores .= ", observaciones= ?";
+		$valores .= ", predeterminado= ?";
+		$valores .= ", fecha_creacion= ?";
+
+		$arguments = [
+			$reg->uid,
+			$input_name,
+			$input_surname,
+			$input_email,
+			$input_phone,
+			trim($input_dir),
+			$input_cod,
+			trim($input_pob),
+			$input_prov,
+			$input_pais,
+			$input_observa,
+			1,
+			date('Y-m-d H:i:s')
+		];
+
+		$sql = "INSERT INTO datos_envio SET $valores";
+		$id_envio = $checkout->executeInsert($sql, $arguments);
+
+		if ($id_envio > 0) {
+			$resp['res'] = "1";
+			$resp['msg'] = $vocabulario_se_ha_guardado_nueva_direccion;
+		}else{
+			$resp['res'] = "0";
+			$resp['msg'] = $vocabulario_se_ha_producido_un_error;
+		}
+
+		$_SESSION['smart_user']['dir_envio'] = $id_envio;
+
+		$sql_no_pred = "UPDATE datos_envio SET predeterminado = 0 WHERE id_cliente=?";
+		$arguments_no_pred = [$reg->uid];
+		$checkout->executeQuery($sql_no_pred, $arguments_no_pred);
+
+		$sql_pred = "UPDATE datos_envio SET predeterminado = 1 WHERE id_cliente = ? AND id = ?";
+		$arguments_pred = [$reg->uid, $id_envio];
+		$checkout->executeQuery($sql_pred, $arguments_pred);
+
+		echo json_encode($resp);
+
+		break;
+
+	case 'actualiza_dir_envios':
+
+		$valores = "";
+		$valores .= "nombre= ?";
+		$valores .= ", apellidos= ?";
+		$valores .= ", email= ?";
+		$valores .= ", telefono= ?";
+		$valores .= ", direccion= ?";
+		$valores .= ", cp= ?";
+		$valores .= ", localidad= ?";
+		$valores .= ", provincia= ?";
+		$valores .= ", pais= ?";
+		$valores .= ", observaciones= ?";
+
+		$arguments = [
+			$input_name,
+			$input_surname,
+			$input_email,
+			$input_phone,
+			trim($input_dir),
+			$input_cod,
+			trim($input_pob),
+			$input_prov,
+			$input_pais,
+			$input_observa,
+			$id_envio
+		];
+
+		// var_dump( $arguments );exit;
+
+		// $sql = "UPDATE datos_envio SET $valores WHERE id= $id_envio";
+		// echo $sql;
+		// exit;
+
+		$_SESSION['smart_user']['dir_envio'] = $idEnvio;
+
+		$sql = "UPDATE datos_envio SET $valores WHERE id= ?";
+		$result = $checkout->executeUpdate($sql, $arguments);
+
+		if ($result > 0) {
+
+			$resp['res'] = "1";
+			$resp['msg'] = $vocabulario_datos_se_han_actualizado;
+
+		}else{
+
+			$resp['res'] = "0";
+			$resp['msg'] = $vocabulario_error_no_posible_actualizar_datos;
+
+		}
+		echo json_encode($resp);
+
+		break;
+
+	case 'set_dir_envio':
+
+	  	$_SESSION['smart_user']['dir_envio'] = $idEnvio;
+
+		$sql = "UPDATE datos_envio SET predeterminado = 0 WHERE id_cliente = ?";
+		$arguments = [$_SESSION['smart_user']['id']];
+
+		$checkout->executeQuery($sql, $arguments);
+
+		$sql = "UPDATE datos_envio SET predeterminado = 1 WHERE id_cliente = ? AND id = ?";
+		$arguments = [$_SESSION['smart_user']['id'], $idEnvio];
+
+		$checkout->executeQuery($sql, $arguments);
+
+		break;
+
+	case 'set_dir_facturacion':
+
+		$_SESSION['smart_user']['dir_facturacion'] = $idEnvio;
+
+		$sql = "UPDATE datos_facturacion SET predeterminado = 0 WHERE id_cliente = ?";
+		$arguments = [$_SESSION['smart_user']['id']];
+
+		$checkout->executeQuery($sql, $arguments);
+
+		$sql = "UPDATE datos_facturacion SET predeterminado = 1 WHERE id_cliente = ? AND id = ?";
+		$arguments = [$_SESSION['smart_user']['id'], $idEnvio];
+
+		$checkout->executeQuery($sql, $arguments);
+
+		break;
+
+	//IGUAL DIR ANTERIOR CON FUNCIONES ANTERIORES
+	// case 'igual-dir-envio':
+
+	// 	if ($checkout->comprueba_dir_pred_activa()) {
+
+	// 		$datos = $checkout->obten_dir_envio(obten_dir_envio_predeterminado($_SESSION['smart_user']['id']));
+	// 		$usuario = $checkout->obten_datos_user($_SESSION['smart_user']['id']);
+
+	// 		$valores = "";
+	// 		$valores .= "id_cliente= ?";
+	// 		$valores .= ", nombre= ?";
+	// 		$valores .= ", apellidos= ?";
+	// 		$valores .= ", empresa= ?";
+	// 		$valores .= ", nif= ?";
+	// 		$valores .= ", email= ?";
+	// 		$valores .= ", telefono= ?";
+	// 		$valores .= ", direccion= ?";
+	// 		$valores .= ", cp= ?";
+	// 		$valores .= ", localidad= ?";
+	// 		$valores .= ", provincia= ?";
+	// 		$valores .= ", pais= ?";
+	// 		$valores .= ", tipo_factura= ?";
+	// 		$valores .= ", predeterminado= ?";
+	// 		$valores .= ", fecha_creacion= ?";
+
+	// 		$sql_pred = "UPDATE datos_facturacion SET predeterminado = 0 WHERE id_cliente= ?";
+	// 		$arguments_pred = [$datos->id_cliente];
+	// 		$checkout->executeQuery($sql_pred, $arguments_pred);
+
+	// 		$sql = "INSERT INTO datos_facturacion SET $valores";
+
+	// 		$arguments = [
+	// 			$datos->id_cliente,
+	// 			$checkout->custom_real_escape_string($usuario->nombre),
+	// 			$checkout->custom_real_escape_string($usuario->apellidos),
+	// 			$usuario->empresa,
+	// 			$usuario->nif_cif,
+	// 			$datos->email,
+	// 			$datos->telefono,
+	// 			$checkout->custom_real_escape_string($datos->direccion),
+	// 			$datos->cp,
+	// 			$checkout->custom_real_escape_string($datos->localidad),
+	// 			$datos->pais,
+	// 			'Particular',
+	// 			1,
+	// 			date('Y-m-d H:i:s')
+	// 		];
+
+	// 		$id_fact = $this->executeInsert($sql, $arguments);
+
+	// 		if (count($res) > 0) {
+
+	// 			$resp['res'] = "1";
+	// 			$resp['msg'] = "Se ha guardado la nueva dirección";
+	// 		} else {
+
+	// 			$resp['res'] = "0";
+	// 			$resp['msg'] = "Error, no ha sido posible guardar la dirección";
+	// 		}
+	// 	} else{
+	// 			$resp['res'] = "0";
+	// 			$resp['msg'] = "$vocabulario_es_necesario_seleccionar_direccion";
+	// 	}
+
+	// 	echo json_encode($resp);
+
+	// 	break;
+	case 'igual-dir-envio':
+
+		if ( $checkout->comprueba_dir_pred_activa () ) {
+
+			$sql = "UPDATE datos_facturacion SET predeterminado = 0 WHERE id_cliente = ?";
+			$arguments = [$_SESSION['smart_user']['id']];
+
+			$checkout->executeQuery($sql, $arguments);
+
+			$datos = $checkout->obten_dir_envio( $checkout->obten_dir_envio_predeterminado( $_SESSION['smart_user']['id'] ) )[0];
+			// var_dump($datos);
+			// echo $datos['id_cliente'];
+			$usuario = $checkout->obten_datos_user( $_SESSION['smart_user']['id'] )[0];
+
+			$valores = "id_cliente, nombre, apellidos, empresa, nif, email, telefono, direccion, cp, localidad, provincia, pais, tipo_factura, predeterminado, fecha_creacion";
+			$placeholders = "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+
+			$sql = "INSERT INTO datos_facturacion ($valores) VALUES ($placeholders)";
+			$arguments = [
+				$datos['id_cliente'],
+				$datos['nombre'],
+				$datos['apellidos'],
+				$usuario->empresa,
+				$usuario->nif_cif,
+				$datos['email'],
+				$datos['telefono'],
+				$checkout->custom_real_escape_string($datos['direccion']),
+				$datos['cp'],
+				$checkout->custom_real_escape_string($datos['localidad']),
+				$datos['provincia'],
+				$datos['pais'],
+				'Particular',
+				1,
+				date('Y-m-d H:i:s')
+			];
+
+			$id_fact = $checkout->executeInsert($sql, $arguments);
+			// echo $id_fact;
+			$_SESSION['smart_user']['dir_facturacion'] = $id_fact;
+
+			if ($id_fact > 0) {
+				$resp['res'] = "1";
+				$resp['msg'] = $vocabulario_se_ha_guardado_nueva_direccion;
+			} else {
+				$resp['res'] = "0";
+				$resp['msg'] = $vocabulario_error_no_posible_guardar_direccion;
+			}
+
+		} else{
+
+				$resp['res'] = "0";
+				$resp['msg'] = $vocabulario_es_necesario_seleccionar_direccion;
+		}
+
+		echo json_encode ( $resp );
+
+		break;
+
+
+	case 'datos-dir-envio':
+
+		$datos = obten_dir_envio( $_SESSION['smart_user']['dir_envio'] );
+
+		// var_dump ( $datos );
+
+		$resp['id_cliente'] = $datos->id_cliente;
+		$resp['email'] = $datos->email;
+		$resp['telefono'] = $datos->telefono;
+		$resp['direccion'] = $datos->direccion;
+		$resp['cp'] = $datos->cp;
+		$resp['localidad'] = $datos->localidad;
+		$resp['provincia'] = $datos->provincia;
+		$resp['pais'] = $datos->pais;
+		$resp['observaciones'] = $datos->observaciones;
+
+		$usuario = obten_datos_user( $_SESSION['smart_user']['id'] );
+
+		// var_dump ( $usuario );
+
+		$resp['nombre'] = $usuario->nombre;
+		$resp['apellidos'] = $usuario->apellidos;
+		$resp['nif_cif'] = $usuario->nif_cif;
+
+		echo json_encode ( $resp );
+
+		break;
+
+	case 'nueva_dir_facturacion':
+
+		$reg = $checkout->obten_datos_user($_SESSION['smart_user']['id'])[0];
+
+		$sql = "UPDATE datos_facturacion SET predeterminado = 0 WHERE id_cliente = ?";
+		$arguments = [$_SESSION['smart_user']['id']];
+
+		$checkout->executeQuery($sql, $arguments);
+
+		$columnas = "id_cliente, nombre, apellidos, empresa, nif, email, telefono, direccion, cp, localidad, provincia, pais, predeterminado, tipo_factura, fecha_creacion";
+		$valores = "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+
+		$sql = "INSERT INTO datos_facturacion ($columnas) VALUES ($valores)";
+		$arguments = [
+			$reg->uid,
+			$checkout->custom_real_escape_string($input_nom),
+			$checkout->custom_real_escape_string($input_ape),
+			$checkout->custom_real_escape_string($input_empresa),
+			$input_nif,
+			$reg->email,
+			$input_telf,
+			$checkout->custom_real_escape_string($input_dir),
+			$input_cod,
+			$checkout->custom_real_escape_string($input_pob),
+			$input_prov,
+			$input_pais,
+			1,
+			$tip_factura,
+			date('Y-m-d H:i:s')
+		];
+
+		$id_fact = $checkout->executeInsert($sql, $arguments);
+
+		$_SESSION['smart_user']['dir_facturacion'] = $id_fact;
+
+		if ( $id_fact > 0 ) {
+			$resp['res'] = "1";
+			$resp['msg'] = $vocabulario_se_ha_guardado_nueva_direccion;
+		} else {
+			$resp['res'] = "0";
+			$resp['msg'] = $vocabulario_error_no_posible_guardar_direccion;
+		}
+		echo json_encode($resp);
+
+		break;
+
+	case 'actualiza_dir_facturacion':
+
+		$valores = "";
+		$valores .= "nombre= ?";
+		$valores .= ", apellidos= ?";
+		$valores .= ", empresa= ?";
+		$valores .= ", nif= ?";
+		$valores .= ", localidad= ?";
+		$valores .= ", pais= ?";
+		$valores .= ", tipo_factura= ?";
+		$valores .= ", provincia= ?";
+		$valores .= ", cp= ?";
+		$valores .= ", telefono= ?";
+		$valores .= ", direccion= ?";
+		$valores .= ", fecha_actualizacion= ?";
+
+		$sql = "UPDATE datos_facturacion SET $valores WHERE id= ?";
+		$arguments = [
+			$checkout->custom_real_escape_string($input_nom),
+			$checkout->custom_real_escape_string($input_ape),
+			$checkout->custom_real_escape_string($input_empresa),
+			$input_nif,
+			$checkout->custom_real_escape_string($input_pob),
+			$input_pais,
+			$tip_factura,
+			$input_prov,
+			$input_cod,
+			$input_telf,
+			$checkout->custom_real_escape_string($input_dir),
+			date('Y-m-d H:i:s'),
+			$id_envio
+		];
+
+		// var_dump($sql);
+		// var_dump($arguments);
+
+		// exit;
+
+		$affected_rows = $checkout->executeUpdate($sql, $arguments);
+
+		if ($affected_rows > 0) {
+			$resp['res'] = "1";
+			$resp['msg'] = $vocabulario_se_ha_actualizado_direccion_correctamente;
+		} else {
+			$resp['res'] = "0";
+			$resp['msg'] = $vocabulario_error_no_posible_actualizar_direccion;
+		}
+
+		echo json_encode($resp);
+		break;
+
+
+	case 'actualiza_datos_personales':
+
+		$valores = "";
+		$valores .= "nombre= ?";
+		$valores .= ", username= ?";
+		$valores .= ", apellidos= ?";
+		$valores .= ", empresa= ?";
+		$valores .= ", telefono= ?";
+		$valores .= ", nif_cif= ?";
+		$valores .= ", fecha_actualizacion= ?";
+
+		$sql = "UPDATE users SET $valores WHERE uid=?";
+
+		$arguments = [ $checkout->custom_real_escape_string($input_nom),
+									 strtolower(str_replace(' ', '_', $input_nom)),
+									 $checkout->custom_real_escape_string($input_ape),
+									 $checkout->custom_real_escape_string($input_empresa),
+									 $input_telf,
+									 $input_nif,
+									 date('Y-m-d H:i:s'),
+									 $_SESSION['smart_user']['id']
+								 ];
+		try {
+
+			if ($checkout->executeUpdate($sql, $arguments) > 0) {
+
+				$resp['res'] = "1";
+				$resp['msg'] = $vocabulario_datos_se_han_actualizado;
+			} else {
+
+				$resp['res'] = "0";
+				$resp['msg'] = $vocabulario_error_no_posible_actualizar_datos;
+			}
+
+		} catch (\PDOException $e) {
+			echo "Error: " . $e->getMessage();
+		}
+
+		echo json_encode ( $resp );
+
+		break;
+
+
+	case 'reset_pass':
+
+		$new_pass = hash('sha256', $input_pass);
+
+		// Prepara la consulta SQL
+		$sql = "UPDATE users SET password=?, activo=1, eliminado=0, login_fallidos=0 WHERE email=? AND password=?";
+		$arguments = [$new_pass, $input_email, $old_pass];
+
+		try {
+			// Ejecuta la consulta
+			$result = $checkout->executeUpdate($sql, $arguments);
+
+			// Verifica el resultado de la consulta
+			if ($result > 0) {
+				$resp['res'] = "1";
+				$resp['msg'] = $vocabulario_contraseña_ha_cambiado;
+			} else {
+				// Depuración adicional
+				$resp['res'] = "0";
+				$resp['msg'] = $vocabulario_se_ha_producido_error_no_cambio_contraseña;
+
+			}
+
+			echo json_encode($resp);
+		} catch (\PDOException $e) {
+			echo "Error: " . $e->getMessage();
+		}
+
+		break;
+
+	case 'cambia_pass':
+
+		$new_pass = hash('sha256', $input_pass);
+		$old_pass = hash('sha256', $input_pass_old);
+
+		$sql_check = "SELECT COUNT(*) FROM users WHERE uid=? AND password=?";
+		$check_arguments = [$uid, $old_pass];
+
+		try {
+			$results = $checkout->executeSelectArray($sql_check, $check_arguments);
+			// var_dump($results);
+			$check_result = $results[0]['COUNT(*)'];
+
+			if ($check_result == 1) {
+				$sql = "UPDATE users SET password=? WHERE uid=? AND password=?";
+				$arguments = [$new_pass, $uid, $old_pass];
+				$result = $checkout->executeUpdate($sql, $arguments);
+
+				$resp['res'] = "1";
+				$resp['msg'] = $vocabulario_contraseña_ha_cambiado;
+			}else{
+				$resp['res'] = "1";
+				$resp['msg'] = $vocabulario_contrasena_actual_incorrecta;
+
+			}
+			echo json_encode($resp);
+
+		} catch (\PDOException $e) {
+			echo "Error: " . $e->getMessage();
+		}
+
+		break;
+
+
+	case 'aplica_codigo_descuento':
+
+		if ($nombre_descuento == '') {
+			$resp['res'] = "0";
+			$resp['msg'] = $vocabulario_codigo_descuento_introducir;
+		} else {
+			$sql = "SELECT * FROM cupones_descuento WHERE nombre_descuento =? AND activo=1";
+			$arguments = [$nombre_descuento];
+			try {
+				$results = $checkout->executeQuery($sql, $arguments);
+				if (count($results) == 0) {
+					$resp['res'] = "0";
+					$resp['msg'] = $vocabulario_codigo_descuento_inexistente . " " . $nombre_descuento;
+				} else {
+					if (!isset($_SESSION['smart_user']['login']) || $_SESSION['smart_user']['login'] != 1) {
+						$resp['res'] = "2";
+						$resp['msg'] = $vocabulario_codigo_descuento_logueado;
+					} else {
+						if (isset($_SESSION['smart_user']['dir_envio'])) {
+							$reg = $results[0];
+
+							if ($reg->distribuidor != NULL && $reg->distribuidor != $_SESSION['smart_user']['id']){
+
+								$resp['res'] = "0";
+								$resp['msg'] = $vocabulario_codigo_descuento_inexistente . " " . $nombre_descuento;
+							}else{
+
+								$pais_envio = $checkout->obten_dir_envio($_SESSION['smart_user']['dir_envio'])[0]->pais;
+								$paises_aplicacion_descuento = explode('|', (string)$reg->pais_aplicacion);
+
+								if (in_array($pais_envio, $paises_aplicacion_descuento, false) || $reg->pais_aplicacion == 1) {
+
+									$fecha_actual = strtotime(date("d-m-Y H:i:00", time()));
+									$fecha_inicio_descuento = strtotime($reg->fecha_inicio);
+									$fecha_fin_descuento = strtotime($reg->fecha_fin);
+
+									if ($fecha_actual > $fecha_inicio_descuento && $fecha_actual < $fecha_fin_descuento) {
+										if ($checkout->permite_uso_descuento_usuario($_SESSION['smart_user']['id'], $reg->id)) {
+											$_SESSION['codigo_descuento']['activo'] = true;
+											$_SESSION['codigo_descuento']['id'] = $reg->id;
+											$_SESSION['codigo_descuento']['nombre'] = $reg->nombre_descuento;
+											$_SESSION['codigo_descuento']['valor'] = $reg->valor;
+											$_SESSION['codigo_descuento']['tipo'] = $reg->tipo;
+											$_SESSION['codigo_descuento']['aplicacion'] = $reg->aplicacion_descuento;
+											$_SESSION['codigo_descuento']['pais_aplicacion'] = $reg->pais_aplicacion;
+
+											$resp['res'] = "1";
+											$resp['msg'] = $vocabulario_codigo_descuento_aplicado;
+										} else {
+											$resp['res'] = "0";
+											$resp['msg'] = $vocabulario_codigo_descuento_uso_permitido . " " . $reg->uso_persona;
+										}
+									} else {
+										$resp['res'] = "1";
+										if ($fecha_actual > $fecha_fin_descuento) {
+											$resp['msg'] = $vocabulario_codigo_descuento_caducado;
+										} else {
+											$resp['msg'] = $vocabulario_codigo_descuento_no_activo;
+										}
+									}
+								} else {
+									$resp['res'] = "0";
+									$resp['msg'] = $vocabulario_codigo_descuento_no_disponible . " " . $pais_envio;
+								}
+							}
+						} else {
+							$resp['res'] = "0";
+							$resp['msg'] = $vocabulario_codigo_descuento_direccion_envio;
+						}
+					}
+				}
+			} catch (\PDOException $e) {
+				echo "Error: " . $e->getMessage();
+			}
+		}
+
+		echo json_encode($resp);
+
+		break;
+
+	case 'elimina_cupon_descuento':
+		$_SESSION['codigo_descuento'] = array();
+		unset($_SESSION['codigo_descuento']);
+
+		$resp['res'] = "1";
+		$resp['msg'] = $vocabulario_codigo_descuento_eliminado;
+		echo json_encode($resp);
+
+		break;
+
+
+	case 'guarda_pedido_temporal':
+
+		$pais = $checkout->obten_dir_envio ( $_SESSION['smart_user']['dir_envio'] )[0]['pais'];
+		// echo $pais;
+		if ($pais == "US"){
+			$es_divisa = true;
+		}else{
+			$es_divisa = false;
+		}
+
+		// $userClass = new userClass();
+		// $moneda_obj = $userClass->obtener_moneda();
+		// $moneda = $moneda_obj->moneda;
+		// echo "Hola";
+		// echo $moneda;
+
+
+
+		$carrito = new Carrito();
+		$carro = $carrito->get_content();
+
+		$aplicacion_iva = array( '', '21', '0', '0', '21', '', '0');
+		$tipo_impuesto = $checkout->obten_tipo_impuesto_envio ( $_SESSION['smart_user']['dir_facturacion'], $_SESSION['smart_user']['dir_envio'] );
+
+		if ( $tipo_impuesto == 5 ) {
+			$iva_aplicado = $checkout->obten_iva_pais ( $pais );
+		}else {
+			$iva_aplicado = $aplicacion_iva[ $tipo_impuesto ];
+		}
+
+		$cupon_aplicado = $checkout->comprueba_cupon_aplicado();
+
+		if ( $cupon_aplicado ) {
+			$cupon_id = $cupon_aplicado->id;
+			$importe_cupon = round( $cupon_aplicado->importe, 2 );
+		}else {
+			$cupon_id = 0;
+			$importe_cupon = 0;
+			$importe_cupon_div = 0;
+		}
+		// echo $importe_cupon;
+		$descuento_iva = 1;
+		$importe_descuento_iva = 0;
+		$total_pagado = round( $_SESSION['carrito']['precio_total'] + $portes->calcula_portes( $_SESSION['smart_user']['dir_envio'], $peso_pedido ) - $importe_cupon, 2 );
+
+		if ( $tipo_impuesto == 2 || $tipo_impuesto == 3 ) {
+
+			$descuento_iva = 1.21;
+			$importe_descuento_iva = round(( $tipo_impuesto == 1 ) ? 0 : $checkout->formatea_importe( $total_pagado - ( $total_pagado * 1.21 ) ), 2 );
+			$total_pagado = round( ( $_SESSION['carrito']['precio_total'] + $portes->calcula_portes( $_SESSION['smart_user']['dir_envio'], $peso_pedido ) - $importe_cupon ) / $descuento_iva, 2 );
+
+		}
+
+		if ( $tipo_impuesto == 6 ) {
+
+			if ( $es_divisa == true ) {
+
+				$descuento_iva = 1;
+				$importe_descuento_iva = 0;
+
+			}else {
+
+				$descuento_iva = 1.21;
+				$importe_descuento_iva = round(( $tipo_impuesto == 1 ) ? 0 : $checkout->formatea_importe( $total_pagado - ( $total_pagado * 1.21 ) ), 2 );
+
+			}
+
+			$total_pagado = round( ( $_SESSION['carrito']['precio_total'] + $portes->calcula_portes( $_SESSION['smart_user']['dir_envio'], $peso_pedido ) - $importe_cupon ) / $descuento_iva, 2 );
+
+		}
+
+		// if ( $tipo_impuesto == 6 ) {
+
+		// 	$descuento_iva = 1.21;
+		// 	$importe_descuento_iva = round(( $tipo_impuesto == 1 ) ? 0 : $checkout->formatea_importe( $total_pagado - ( $total_pagado * 1.21 ) ), 2 );
+		// 	$total_pagado = round( ( $_SESSION['carrito']['precio_total'] + $portes->calcula_portes( $_SESSION['smart_user']['dir_envio'], $peso_pedido ) - $importe_cupon ) / $descuento_iva, 2 );
+
+		// }
+
+		// if ( $tipo_impuesto == 6 ) {
+
+		// 	$descuento_iva = 1;
+		// 	$importe_descuento_iva = 0;
+		// 	$total_pagado = round( $_SESSION['carrito']['precio_total'] + $portes->calcula_portes( $_SESSION['smart_user']['dir_envio'], $peso_pedido) - $importe_cupon, 2 );
+
+		// }
+
+		if ( $tipo_impuesto == 5 ) {
+
+			$descuento_iva = 0;
+
+			$iva = $checkout->obten_iva_pais( $pais );
+
+			$total_pagado = round( ( ( $_SESSION['carrito']['precio_total'] + $portes->calcula_portes($_SESSION['smart_user']['dir_envio'], $peso_pedido ) - $importe_cupon ) / 1.21 ) * ( 1 + $iva / 100), 2 );
+
+		}
+
+		$peso_pedido = $checkout->calcula_peso_pedido();
+
+		$ref_pedido = $checkout->obten_ref_nuevo_pedido();
+		$id_cliente = $_SESSION['smart_user']['id'];
+
+		$id_facturacion = $_SESSION['smart_user']['dir_facturacion'];
+		$id_envio = $_SESSION['smart_user']['dir_envio'];
+		$tiene_vies = ( $tipo_impuesto == 3 ) ? 1 : 0;
+		$total_sinenvio = round( $checkout->formatea_importe( $_SESSION['carrito']['precio_total'] ), 2 );
+		$gastos_envio =round( $portes->calcula_portes( $_SESSION['smart_user']['dir_envio'], $peso_pedido ), 2 );
+
+		$metodo_pago = $_SESSION['smart_user']['metodo_pago'];
+
+		if ( $paypal_id != 0 ) {
+			$metodo_pago = 3;
+		}
+
+		$estado_pago = 'Pendiente';
+		$fecha_pago = null;
+
+		$estado_envio = 'Pendiente';
+		$fecha_envio = null;
+		$fecha_creacion = date('Y-m-d H:i:s');
+		$fecha_actualizacion = null;
+		$idioma = $_SESSION['id_idioma'];
+		$email_seguimiento = 0;
+		$fecha_envio_seguimiento = null;
+		$cancelado = 0;
+		$tipo_factura = $_SESSION['smart_user']['tipo_factura'];
+
+		if ( $es_divisa ) {
+
+			$cambio_divisa = $checkout->get_cambio_divisa('dolar')[0]["valor"];
+
+			$total_sinenvio_div = round( $total_sinenvio, 2 );
+			$gastos_envio_div = round( $portes->calcula_portes( $_SESSION['smart_user']['dir_envio'], $peso_pedido ), 2 );
+			// $gastos_envio_div = round( $portes->calcula_portes($_SESSION['smart_user']['dir_envio']), 2 );
+			$importe_cupon_div = round( $importe_cupon, 2 );
+			$total_pagado_div = round( $total_pagado, 2 );
+
+			$total_sinenvio = round( $total_sinenvio * $cambio_divisa, 2 );
+			$gastos_envio = round( $gastos_envio_div * $cambio_divisa, 2 );
+			$importe_cupon = round( $importe_cupon * $cambio_divisa, 2 );
+			$total_pagado = round( $total_pagado * $cambio_divisa, 2 );
+
+		}else {
+
+			$cambio_divisa = 1;
+
+			$total_sinenvio_div = 0;
+			$gastos_envio_div = 0;
+			$importe_cupon_div = 0;
+			$total_pagado_div = 0;
+
+		}
+
+		if (1) {
+			$promocion_id = 0;
+		}else {
+			$promocion_id = 0;
+		}
+
+		// echo $gastos_envio;
+		// echo "<br>";
+		// echo $gastos_envio_div;
+
+		// echo $total_pagado;
+
+		// exit;
+
+		$arguments = [ $ref_pedido,
+									 $id_cliente,
+									 $tipo_impuesto,
+									 $iva_aplicado,
+									 $id_facturacion,
+									 $id_envio,
+									 $tiene_vies,
+									 $total_sinenvio,
+									 $total_sinenvio_div,
+									 $gastos_envio,
+									 $gastos_envio_div,
+									 $cupon_id,
+									 $importe_cupon,
+									 $importe_cupon_div,
+									 $promocion_id,
+									 $importe_descuento_iva,
+									 $metodo_pago,
+									 $redsys_num_order,
+									 $paypal_id,
+									 $estado_pago,
+									 $fecha_pago,
+									 $total_pagado,
+									 $total_pagado_div,
+									 $peso_pedido,
+									 $estado_envio,
+									 $fecha_envio,
+									 $fecha_creacion,
+									 $fecha_actualizacion,
+									 $idioma,
+									 $email_seguimiento,
+									 $fecha_envio_seguimiento,
+									 $cancelado,
+									 $cambio_divisa,
+									 $tipo_factura
+								 ];
+
+
+		$valores = "";
+		$valores .= "ref_pedido=?, ";
+		$valores .= "id_cliente=?, ";
+		$valores .= "tipo_impuesto=?, ";
+		$valores .= "iva_aplicado=?, ";
+		$valores .= "id_facturacion=?, ";
+		$valores .= "id_envio=?, ";
+		$valores .= "tiene_vies=?, ";
+		$valores .= "total_sinenvio=?, ";
+		$valores .= "total_sinenvio_div=?, ";
+		$valores .= "gastos_envio=?, ";
+		$valores .= "gastos_envio_div=?, ";
+		$valores .= "cupon_id=?, ";
+		$valores .= "cupon_importe=?, ";
+		$valores .= "cupon_importe_div=?, ";
+		$valores .= "promocion_id=?, ";
+		$valores .= "descuento_iva=?, ";
+		$valores .= "metodo_pago=?, ";
+		$valores .= "redsys_num_order=?, ";
+		$valores .= "paypal_id=?, ";
+		$valores .= "estado_pago=?, ";
+		$valores .= "fecha_pago=?, ";
+		$valores .= "total_pagado=?, ";
+		$valores .= "total_pagado_div=?, ";
+		$valores .= "peso_pedido=?, ";
+		$valores .= "estado_envio=?, ";
+		$valores .= "fecha_envio=?, ";
+		$valores .= "fecha_creacion=?, ";
+		$valores .= "fecha_actualizacion=?, ";
+		$valores .= "idioma=?, ";
+		$valores .= "email_seguimiento=?, ";
+		$valores .= "fecha_envio_seguimiento=?, ";
+		$valores .= "cancelado=?, ";
+		$valores .= "cambio_divisa=?, ";
+		$valores .= "tipo_factura=? ";
+
+		$sql = "INSERT INTO pedidos_temp SET $valores;";
+
+		try {
+
+		    $id_pedido = $checkout->executeInsert($sql, $arguments);
+
+		    $_SESSION['smart_user']['finaliza-pedido'] = 1;
+			$_SESSION['smart_user']['ped_temporal'] = $id_pedido;
+			// echo "YEE";
+			// echo $cupon_id;
+			// var_dump($cupon_aplicado);
+			// echo "YEE";
+			// var_dump($cupon_aplicado->aplicacion);
+			$cupon_aplicado_aplicacion = $cupon_aplicado->aplicacion;
+			// echo $cupon_aplicado_aplicacion->id_prods;
+
+			// echo $cupon_aplicado_aplicacion;
+			if ( $cupon_id > 0 ) {
+				$id_prods_descuento = $checkout->obten_aplicacion_descuento ( $cupon_aplicado_aplicacion )->id_prods;
+				$array_id_prods_descuento = explode( '|', $id_prods_descuento );
+			}
+
+			$ok = true;
+
+			foreach($carro as $producto) {
+
+				$id_prod = $producto['id'];
+				$nombre_prod = $producto['nombre'];
+				$nombre_prod_admin = $checkout->obten_nombre_prod_idioma( $id_prod, 1);
+				$sku = $producto['sku'];
+				$cantidad = $producto['cantidad'];
+
+				$obten_descuento_producto = $checkout->obten_descuento_producto($producto['id'], $_SESSION['user_ubicacion']);
+				// echo $obten_descuento_producto ;
+				if ( $cupon_id > 0 && $obten_descuento_producto == 0 ) {
+
+					$cupon = $checkout->obten_descuento( $cupon_id );
+
+					if ( $cupon->tipo == '%' && in_array( $id_prod , $array_id_prods_descuento) ) {
+						$cupon_importe = round( $producto['precio'] * ( $cupon->valor / 100), 2);
+						$precio = $producto['precio'];
+						// $precio = $producto['precio'] - $cupon_importe;
+						$cupon = $cupon_id;
+					}else {
+						$cupon_importe = 0;
+						$precio = $producto['precio'];
+						$cupon = 0;
+					}
+
+				}else {
+
+					$precio = $producto['precio'];
+					$cupon_importe = 0;
+					$cupon = 0;
+
+				}
+
+				$descuento = $checkout->obten_descuento_producto( $id_prod, $_SESSION['user_ubicacion'] );
+				if ( $descuento == 0 ) {
+
+					$descuento_importe = 0;
+					$descuento_importe_div = 0;
+
+				}else {
+
+					$descuento_importe_div = round( $precio * ( $descuento / 100 ), 2 );
+					$descuento_importe = round( $descuento_importe_div * $cambio_divisa, 2 ) ;
+
+				}
+
+				if ( $es_divisa ) {
+
+					$precio_div = round( $producto['precio'], 2 );
+					$cupon_importe_div = round( $cupon_importe, 2 );
+
+					$precio = round( $producto['precio'] * $cambio_divisa, 2 );
+					$cupon_importe = round( $cupon_importe * $cambio_divisa, 2 );
+
+				}else {
+
+					$precio_div = 0;
+					$cupon_importe_div = 0;
+
+				}
+
+				$promocion_id = 0;
+				$promocion_descuento = 0;
+				$promocion_descuento_div = 0;
+
+				$valores_linea = "";
+				$valores_linea .= "id_pedido = ?, ";
+				$valores_linea .= "id_prod = ?, ";
+				$valores_linea .= "nombre_prod = ?, ";
+				$valores_linea .= "nombre_prod_admin = ?, ";
+				$valores_linea .= "sku = ?, ";
+				$valores_linea .= "cantidad = ?, ";
+				$valores_linea .= "precio = ?, ";
+				$valores_linea .= "precio_div = ?, ";
+				$valores_linea .= "descuento = ?, ";
+				$valores_linea .= "descuento_importe = ?, ";
+				$valores_linea .= "descuento_importe_div = ?, ";
+				$valores_linea .= "cupon_id = ?, ";
+				$valores_linea .= "cupon_importe = ?, ";
+				$valores_linea .= "cupon_importe_div = ?, ";
+				$valores_linea .= "promocion_id = ?, ";
+				$valores_linea .= "promocion_descuento = ?, ";
+				$valores_linea .= "promocion_descuento_div = ?, ";
+				$valores_linea .= "fecha_creacion = ?";
+
+				$sql = "INSERT INTO detalles_pedido_temp SET $valores_linea";
+				$arguments_linea = [ $id_pedido,
+															$id_prod,
+															$nombre_prod,
+															$nombre_prod_admin,
+															$sku,
+															$cantidad,
+															$precio,
+															$precio_div,
+															$descuento,
+															$descuento_importe,
+															$descuento_importe_div,
+															$cupon,
+															$cupon_importe,
+															$cupon_importe_div,
+															$promocion_id,
+															$promocion_descuento,
+															$promocion_descuento_div,
+															$fecha_creacion ];
+
+				try {
+
+						if ( $checkout->executeInsert( $sql, $arguments_linea ) > 0 ) {
+
+							$resp['id_temp'] = $id_pedido;
+							$resp['res'] = "1";
+							$resp['metPago'] = $_SESSION['smart_user']['metodo_pago'];
+
+							$ok = true;
+
+						}else {
+
+							$ok = false;
+
+						}
+
+				} catch (\PDOException $e) {
+					echo "Error: " . $e->getMessage();
+				}
+
+			}
+
+			if ( $ok ) {
+
+				if ( $_SESSION['smart_user']['metodo_pago']== 2 ) {
+
+					$resp['msg'] = $vocabulario_redirigiendo_redsys;
+
+				}
+
+				if ( $_SESSION['smart_user']['metodo_pago']== 1 ) {
+
+					$resp['msg'] = $vocabulario_tramitando_pedido;
+
+				}
+
+			}else {
+
+				$resp['res'] = "0";
+				$resp['msg'] = $vocabulario_se_ha_producido_un_error;
+
+			}
+
+			echo json_encode ( $resp );
+
+		} catch (\PDOException $e) {
+
+		    echo "Error: " . $e->getMessage();
+
+		}
+
+		break;
+
+	case 'actualiza_form_lenguaje_geolocaliza':
+
+		$idiomas=$checkout->obten_idiomas();
+		$idioma_pref = $userClass->obten_datos_pais( $input_pais )->idioma;
+
+		foreach ($idiomas as $idioma) {
+
+			if ($idioma->pais == ""){
+				$url_idioma = $idioma->idioma;
+			}else{
+				$url_idioma = $idioma->idioma . "-" . $idioma->pais;
+			}
+			?>
+			<option value="<?php echo $url_idioma ?>" <?php if( $idioma->id == $idioma_pref) echo 'selected' ?>><?php echo $idioma->nombre_idioma . ' (' . $url_idioma . ')' ?></option>
+		<?php }
+
+		break;
+
+	case 'actualiza_datos_ubicacion_idioma':
+
+		$idioma = explode( '-', $input_idioma );
+		if ( sizeof( $idioma ) == 1 ) {
+			$sql = "SELECT id FROM idiomas WHERE idioma = ?";
+			$arguments = [ $idioma[0] ];
+		}else {
+			$sql = "SELECT id FROM idiomas WHERE idioma = ? AND pais= ?";
+			$arguments=[ $idioma[0], $idioma[1] ];
+		}
+
+		$usu_id_idioma = $checkout->executeQuery( $sql, $arguments )[0]->id;
+
+		$new_url = $userClass->urls( $id_url, $usu_id_idioma )[0]->valor;
+
+		session_start();
+		$_SESSION['user_ubicacion'] = $input_pais;
+
+		$_SESSION['user_idioma'] = $usu_id_idioma;
+
+		$new_url = ( $new_url == '/') ? '' : $new_url;
+
+		$resp['res'] = 1;
+		$resp['msg'] = $input_idioma  . "/" . $new_url;
+
+		echo json_encode ( $resp, JSON_UNESCAPED_SLASHES );
+
+		break;
+
+	case 'modifica_ubicacion':
+
+		$_SESSION['user_ubicacion'] = $input_pais;
+		$resp['res'] = 1;
+		$resp['msg'] = $vocabulario_ha_cambiado_ubicacion;
+
+		echo json_encode($resp);
+
+		// break;
+
+		// case 'actualiza_carrito_pais':
+
+		$carrito = new Carrito();
+		$carro = $carrito->get_content();
+
+		$productos_carrito = array();
+
+		foreach($carro as $producto) {
+
+			$id_idioma = 1;
+
+			$id_producto = $producto['id'];
+			$cantidad = $producto['cantidad'];
+
+			$array_prod = array(
+				'id' => $id_producto,
+				'cantidad' => $cantidad
+			);
+
+			array_push( $productos_carrito, $array_prod );
+
+		}
+
+		$carrito->destroy();
+
+	  // var_dump( $productos_carrito );
+	  // echo "<br><br><br>";
+
+		foreach ( $productos_carrito as $prod ) {
+
+			$sql = "SELECT p.id, p.books_id, pn.nombre, p.id_categoria, p.miniatura, pp.precio, p.sku, p.peso, pp.precio
+							FROM productos p
+					    INNER JOIN productos_nombres pn ON p.id = pn.id_producto
+					    INNER JOIN productos_precios_new pp ON p.id = pp.id_producto
+					    WHERE p.id = ? AND pn.id_idioma= ? AND pp.cod_pais= ?";
+
+			$arguments = [ $prod['id'], $id_idioma_global, $_SESSION['user_ubicacion'] ];
+			$reg = $checkout->executeQuery($sql, $arguments)[0];
+
+
+			$articulo = array(
+            "id"        => $reg->id,
+            "books_id"  => $reg->books_id,
+            "nombre"    => $reg->nombre,
+            "categoria" => $reg->id_categoria,
+            "img"       => $reg->miniatura,
+            "cantidad"  => $prod['cantidad'],
+            "precio"    => cambia_coma($reg->precio),
+            "sku"       => $reg->sku,
+            "peso"      => $reg->peso,
+      );
+
+      // var_dump($articulo);
+      // echo "<br><br><br>";
+      // exit;
+
+      $carrito->add($articulo);
+
+		}
+
+		break;
+
+	case 'baja_usuario':
+		$sql = "SELECT * FROM users WHERE uid = ?";
+		$arguments = [ $UserId ];
+
+		$user = $checkout->executeQuery($sql, $arguments);
+		$id_idioma = $_SESSION['id_idioma'];
+		$email = $user[0]->email;
+		$nombre = $user[0]->nombre;
+		$pass = $user[0]->password;
+
+		$emailClass = new emailClass;
+		$emailClass->email_confirmar_baja($id_idioma, $email, $nombre, $pass);
+
+		$resp['res'] = "1";
+		$resp['msg'] = $vocabulario_hemos_enviado_email_con_instrucciones_para_resetear_contraseña;
+
+		echo json_encode($resp);
+
+		session_destroy();
+
+		break;
+
+	case 'config_tipo_factura':
+
+		$_SESSION['smart_user']['tipo_factura'] = $tipo_factura;
+
+	break;
+
+
+	case 'guarda_operacion_paypal':
+
+	$paypal_envio = $paypal_data['purchase_units'][0]['shipping']['name']['full_name'] . ' | ' . $paypal_data['purchase_units'][0]['shipping']['address']['address_line_1'] . ' | ' . $paypal_data['purchase_units'][0]['shipping']['address']['address_line_2'] . ' | ' . $paypal_data['purchase_units'][0]['shipping']['address']['postal_code'] . ' | ' . $paypal_data['purchase_units'][0]['shipping']['address']['country_code'];
+
+	$paypal_pago =	$paypal_data['payer']['name']['given_name'] . ' ' . $paypal_data['payer']['name']['surname'] . ' | ' . $paypal_data['payer']['address']['address_line_1'] . ' | ' . $paypal_data['payer']['address']['admin_area_2'] . ' | ' . $paypal_data['payer']['address']['admin_area_1'] . ' | ' . $paypal_data['payer']['address']['postal_code'] . ' | ' . $paypal_data['payer']['address']['country_code'];
+
+	$valores = "";
+	$valores .= "id_transaccion=?";
+	$valores .= ", estado=?";
+	$valores .= ", paypal_email=?";
+	$valores .= ", importe=?";
+	$valores .= ", paypal_envio=?";
+	$valores .= ", paypal_facturacion=?";
+
+	$sql = "INSERT INTO pago_paypal SET $valores";
+
+	$arguments = [
+		$paypal_data['id'],
+		$paypal_data['status'],
+		$paypal_data['purchase_units'][0]['payee']['email_address'],
+		$paypal_data['purchase_units'][0]['amount']['value'],
+		$paypal_envio,
+		$paypal_pago
+	];
+
+	$id_insert = $checkout->executeInsert($sql, $arguments);
+
+	echo $id_insert;
+
+	break;
+
+}
+

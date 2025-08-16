@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /carrito/
+Disallow: /panel/
+Disallow: /admin/
+Disallow: /en/cart/
+Disallow: /en/panel/
+Disallow: /fr/panneau/
+Disallow: /fr/panier/
+Disallow: /it/carrello/
+Disallow: /it/pannello/
+
+Sitemap: https://www.smartcret.com/sitemap.xml

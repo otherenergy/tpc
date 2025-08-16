@@ -1,0 +1,986 @@
+
+table#tbl_pedidos tr > td {
+    font-size: 14px!important;
+}
+.table.carrito tr.datos td {
+    min-width: auto;
+}
+th {
+    font-size: 14px!important;
+}
+td.ref {
+    font-weight: 401!important;
+    min-width: 74px!important;
+}
+.datos td.desc {
+    min-width: 80px!important;
+}
+.admin_logo .logo img {
+    margin-bottom: 21px;
+    height: 60px;
+    transition: all 300ms cubic-bezier(0.55, 0, 0.1, 1);
+}
+header {
+    background-color: #fff;
+    height: 70px;
+}
+span.estado {
+    padding: 3px 8px;
+    border-radius: 2px;
+    font-size: 14px;
+}
+.container.listado.datos {
+    margin-top: 50px!important;
+}
+.menu-lat {
+    margin-top: 0px!important;
+}
+div#tbl_pedidos_length label {
+    font-size: 14px;
+}
+span.reg {
+    margin-left: 5px!important;
+    display: inline-block;
+}
+div#tbl_pedidos_length {
+    margin-bottom: 20px;
+}
+th.info {
+    min-width: 75px!important;
+}
+header h1 {
+    font-size: 25px;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+div#tbl_pedidos_info {
+    font-size: 14px;
+}
+ul.pagination {
+    padding-top: 45px!important;
+}
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #35471e!important;
+    border-color: #35471e!important;
+}
+.page-item a {
+    color: #35471e;
+}
+.page-item a:hover {
+    color: #35471e;
+}
+.page-link:hover {
+    z-index: 2;
+    color: #fff!important;
+    background-color: #35471e!important;
+    border-color: #35471e!important;
+}
+.admin_logo a {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 30px;
+}
+.menu-panel .tit td {
+    padding-left: 10px;
+    font-size: 16px;
+}
+.tit .fa-user {
+    font-size: 16px;
+    bottom: 2px;
+}
+.container.listado.datos.pedidos h1 {
+    font-size: 24px;
+    padding: 20px 0;
+}
+.admin .container.contenido {
+    margin-top: 0;
+}
+h1.center.fixed {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 180px;
+    text-align: center;
+    background-color: #fff;
+    z-index: 9;
+}
+table.carrito thead.fixed {
+    border-bottom: 1px solid #ccc;
+    position: fixed;
+    top: 60px;
+    z-index: 9;
+    background-color: #fff;
+    padding-bottom: 0px;
+    box-shadow: grey 2px 6px 6px;
+    transition: all 300ms;
+}
+.borde_sombra {
+    -webkit-box-shadow: 0 4px 6px -6px grey;
+    -moz-box-shadow: 0 4px 6px -6px grey;
+    box-shadow: 0 4px 6px -6px grey;
+}
+.menu_actual {
+    background-color: #92bf23;
+    color: #fff!important;
+}
+.menu_actual a {
+    color: #fff!important;
+}
+img.user_flag {
+    width: 20px!important;
+    height: auto!important;
+    margin-left: 5px!important;
+    position: relative!important;
+    bottom: 1px!important;
+}
+th.pais {
+    min-width: 60px;
+}
+.menu-lat .item:hover {
+    background-color: #dbdbdb;
+}
+.menu-panel .item i {
+    font-size: 15px;
+    position: relative;
+    top: 0px;
+}
+tr.tit i {
+    font-size: 15px;
+    margin-right: 10px;
+    position: relative;
+    bottom: 1px;
+}
+td.izq.sku {
+    font-weight: 700!important;
+}
+.listado-articulos td.izq img:hover {
+    cursor: pointer;
+}
+.centrado {
+    width: auto;
+    height: 85%;
+}
+span.sku {
+    margin-left: 5px;
+    font-size: 14px;
+    font-weight: 600;
+}
+th.izq.img {
+    width: 80px!important;
+}
+#tbl_pedidos span.met {
+    font-size: 13px;
+    font-weight: 400;
+    margin-top: 4px;
+    position: relative;
+    display: block;
+}
+h1.center {
+    font-size: 30px;
+    margin-bottom: 16px;
+}
+.act .fa-check-square.on {
+    font-size: 20px;
+    vertical-align: middle;
+    color: #57a957;
+}
+.act .far.fa-square {
+    font-size: 20px;
+    vertical-align: bottom;
+    color:#b3b3b3;
+}
+.prec {
+    font-weight: 500!important;
+}
+td.vd {
+    background-color: #92bf23;
+}
+span.desc_txt {
+    font-size: 14px;
+    line-height: 18px;
+    font-family: roboto;
+    position: relative;
+    top: 0px;
+}
+tr.total.envios.descuento {
+     background-color: #fff;
+}
+.vd {
+    background-color: #92bf23!important;
+}
+td.td-unidades {
+    max-width: 42px!important;
+}
+td#total_pagado b {
+    font-size: 18px;
+}
+tr.total.pagado {
+    background-color: #dbdbdb;
+}
+.table > thead {
+    background-color: #dbdbdb;
+}
+td.izq.dat {
+    font-weight: 400;
+    font-size: 15px;
+}
+.btns_funciones {
+    text-align: right;
+    margin-bottom: 30px;
+}
+.btns_funciones button {
+    border: 1px solid;
+    font-size: 12px;
+}
+button:focus {
+    outline: none!important;
+}
+button.print_btn {
+    color: #35471e;
+    background-color: transparent;
+    padding: 3px 6px;
+}
+button.print_btn:hover {
+    color: #fff;
+    background-color: #35471e;
+}
+.btns_funciones button i {
+    font-size: 13px;
+    position: relative;
+    top: 0px;
+    margin-left: 3px;
+}
+img.user_flag {
+    opacity: 0.6;
+}
+#datos-pedido .modal-dialog {
+    max-width: 500px!important;
+}
+span#estado_pago:hover, span#estado_envio:hover {
+    cursor: pointer;
+}
+.form-control:focus {
+    color: #212529;
+    background-color: #fff;
+    border-color: #ccc;
+    outline: 0;
+    box-shadow: none;
+}
+span#estado_pago {
+    margin-right: 6px;
+}
+span.estado.pagado, span.estado.enviado {
+    background-color: #4bdf4b;
+    margin-right: 5px;
+}
+body.listado-pedidos tr img:hover {
+    cursor: pointer;
+}
+.envio_email i {
+    font-size: 20px;
+    position: relative;
+    top: 1px;
+}
+.envio_email i.fa-check-circle {
+    color: #4bdf4b;
+}
+.envio_email i.fa-times-circle {
+    color: #dc3545;
+}
+.oculto {
+    display: none;
+}
+table td.info button {
+    margin-right: 0!important;
+}
+
+/* datepicker */
+.datepicker table tr td.active.active, .datepicker table tr td.active.disabled, .datepicker table tr td.active.disabled.active, .datepicker table tr td.active.disabled.disabled, .datepicker table tr td.active.disabled:active, .datepicker table tr td.active.disabled:hover, .datepicker table tr td.active.disabled:hover.active, .datepicker table tr td.active.disabled:hover.disabled, .datepicker table tr td.active.disabled:hover:active, .datepicker table tr td.active.disabled:hover:hover, .datepicker table tr td.active.disabled:hover[disabled], .datepicker table tr td.active.disabled[disabled], .datepicker table tr td.active:active, .datepicker table tr td.active:hover, .datepicker table tr td.active:hover.active, .datepicker table tr td.active:hover.disabled, .datepicker table tr td.active:hover:active, .datepicker table tr td.active:hover:hover, .datepicker table tr td.active:hover[disabled], .datepicker table tr td.active[disabled] {
+    background-color: #92bf23!important;
+    background-image: none;
+    border-radius: 0;
+}
+.datepicker-days {
+    padding: 10px;
+    border-radius: 0!important;
+}
+.datepicker.datepicker-dropdown.dropdown-menu.datepicker-orient-left.datepicker-orient-bottom {
+    border-radius: 0;
+}
+.bootstrap-timepicker-widget table td input {
+    width: 35px!important;
+    margin: 0;
+    text-align: center;
+}
+.bootstrap-timepicker-widget a.btn, .bootstrap-timepicker-widget input {
+    border-radius: 0;
+    border-width: 1px;
+    padding: 2px 4px!important;
+}
+button#new {
+    margin-left: 20px;
+    font-size: 14px;
+    border: 1px solid #35471e;
+    background-color: #35471e;
+    color: #fff;
+    padding: 5px 10px;
+}
+button#new:hover {
+    background-color: #fff;
+    color: #35471e;
+}
+button#new i {
+    margin: 0 0 0 11px;
+    top: 0px;
+}
+span.required {
+    color: #db5757;
+}
+.form_info {
+    font-size: 12px;
+    position: relative;
+    bottom: 1px;
+}
+#cupon-descuento .modal-body .close {
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    right: -7px;
+    top: -8px;
+    font-size: 20px;
+}
+th.izq.des {
+    max-width: 300px;
+}
+button.delete {
+    border: 1px solid #e9b1b1;
+    color: #e9b1b1;
+    padding: 3px 10px 4px;
+    background-color: transparent;
+}
+
+button.delete:hover {
+    border: 1px solid #df6060;
+    background: #df6060;
+    color: #fff;
+}
+button.delete i {
+    margin: 0px!important;
+    margin-right: 0!important;
+    position: relative;
+    bottom: 0;
+    left: 0;
+}
+span#num_pedidos,
+span#num_usos {
+    text-decoration: none;
+    color: #35471e;
+    padding: 2px 10px;
+    border: 1px;
+    border-style: dotted;
+}
+span#num_pedidos.activ:hover,
+span#num_usos.activ:hover {
+    cursor: pointer;
+    border-style: solid;
+    background-color: #35471e;
+    color: #fff;
+}
+table.descuento tr {
+    height: 30px;
+}
+table.descuento {
+    text-align: left;
+}
+table.carrito.descuento td {
+    vertical-align: middle;
+    padding: 9px 10px!important;
+    line-height: 18px;
+}
+table.descuento thead tr td {
+    font-weight: 600;
+}
+.listado.cupones .btns_funciones {
+    text-align: right;
+    margin-bottom: 20px;
+}
+span#num_pedidos i {
+    position: relative;
+    top: 0px;
+    left: 1px;
+    margin-right: 0!important;
+    font-size: 11px;
+}
+h1.center.fixed.borde_sombra {
+    font-size: 24px;
+    padding: 20px 0;
+}
+table#tbl_pedidos tbody tr:hover {
+    background-color: #f6fbea;
+}
+table.conf {
+    width: 100%;
+}
+tr.line_conf  td {
+    height: 60px;
+    border-bottom: 1px solid #35471e40;
+}
+.modal-body .close {
+    font-size: 22px;
+    top: -10px;
+}
+span.listado-pedido-descuento {
+    font-size: 10px;
+    font-weight: 500;
+    border: 1px solid;
+    padding: 2px 4px;
+    position: relative;
+    top: 6px;
+    opacity: 0.8;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+td.btn_envio {
+    min-width: 125px;
+    vertical-align: middle;
+}
+button.envia_mail {
+    background-color: transparent;
+    color: #35471e;
+}
+button.envia_mail:hover {
+    background-color: #35471e;
+    color: #fff;
+}
+button.envia_mail i {
+    margin: 0;
+    position: relative;
+    top: 0px;
+    font-size: 14px;
+    margin-left: 4px;
+}
+input#solo_kits {
+    border: 1px solid #ccc!important;
+    width: 15px;
+    height: 15px;
+    position: relative;
+    top: 1px;
+    margin-right: 5px;
+}
+.menu-panel .link .item a.nav-link {
+    /* padding: 6px 16px 6px 16px; */
+    padding: 5px 16px 5px 16px;
+    font-weight: 400;
+}
+tr.importe_total {
+background-color: #dbfbe1!important;
+}
+button.dt-button.buttons-html5 {
+    color: #35471e;
+    background-color: transparent;
+    padding: 3px 14px;
+    font-size: 12px;
+    border: 1px solid;
+}
+button.dt-button.buttons-html5:hover {
+    color: #fff;
+    background-color: #35471e;
+}
+.dt-buttons {
+    text-align: right;
+    margin-bottom: 24px;
+}
+button.print_btn i {
+    position: relative;
+    top: 0px;
+    margin-left: 6px;
+    margin-right: 1px;
+}
+span.num_usu {
+    margin-left: 10px;
+    font-size: 16px;
+    position: relative;
+    bottom: 2px;
+}
+
+span.fech_envio {
+    font-size: 11px;
+    margin-top: 4px;
+    display: block;
+    font-weight: 100;
+}
+tr.datos.pedidos.cancelado {
+    background-color: #f1cece;
+}
+tr.datos.pedidos.cancelado:hover {
+    background-color: #f1cece!important;
+}
+span.cancel {
+    background-color: #f1cece;
+    padding: 5px 20px;
+}
+
+.datos_llamada h4 {
+    margin: 65px 0 30px;
+    border-bottom: 1px solid;
+    padding-bottom: 5px;
+}
+.datos_llamada p {
+    overflow-wrap: break-word;
+}
+td#importe {
+    height: 70px;
+}
+.alarma_vies {
+    text-align: center;
+    background-color: #f3adad;
+    padding: 15px;
+    color: #000;
+    font-size: 17px;
+    font-weight: 500;
+}
+i.atencion {
+    color: #e5a612;
+    font-size: 20px;
+}
+span.vies {
+    background-color: #9f5417;
+    color: #fff;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 10px;
+}
+a.so_books {
+    text-decoration: none;
+    background-color: #dbdbdb;
+    border: 1px solid #dbdbdb;
+    color: #000;
+    padding: 3px 4px;
+}
+a.so_books:hover {
+    background-color: transparent;
+    color: #000;
+}
+img.colore_no {
+    width: 100px;
+}
+.colores_no_vendidos .item {
+    margin-bottom: 30px;
+    text-align: center;
+}
+.item .col_nom {
+    text-align: center;
+    font-weight: 500;
+}
+img.colore_no {
+    width: 90%;
+}
+th.izq.sorting.ped_fecha {
+    min-width: 55px;
+}
+span.num_redys {
+    font-size: 12px;
+    font-weight: 500;
+    color: black;
+}
+.cancelacion {
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #f1cece;
+    padding: 10px;
+}
+td.cancel {
+    text-align: center!important;
+}
+img#img_color, img#img_color_agotado {
+    width: 100px!important;
+}
+img#img_color:hover, img#img_color_agotado:hover {
+    cursor: pointer;
+}
+button.print_btn.lista {
+    font-size: 12px;
+    border-width: 1px!important;
+}
+button.print_btn.lista {
+    font-size: 12px;
+    border-width: 1px!important;
+    position: relative;
+    bottom: 3px;
+    left: 21px;
+}
+span.mini {
+    font-size: 11px;
+    position: relative;
+    bottom: 5px;
+}
+span.prod_desc {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    padding: 5px 7px;
+    background-color: #cd0000;
+    margin-left: 10px;
+    border-radius: 5px;
+}
+span.directo.listado-pedido-descuento {
+    background-color: #f1f1f1;
+    color: #212529;
+    font-weight: 400;
+    border-color: #212529;
+    font-size: 9px;
+    top: -3px;
+}
+tr.datos.pedidos.cancelado span.estado.pagado {
+    background: #fb8888;
+}
+.td_preparacion span.estado,
+.td_envio span.estado,
+.td_documentacion span.estado {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 2px 5px;
+}
+.btn_preparacion {
+    border: 1px solid #ffc107;
+    padding: 10px 12px;
+    color: #35471e;
+    font-weight: 500;
+    background-color: #ffc107;
+}
+.btn_preparacion:hover {
+    border: 1px solid #35471e;
+    color: #35471e;
+    font-weight: 500;
+    background-color: transparent;
+}
+span.ref_p {
+    background-color: #d3d3d3;
+    padding: 5px 10px;
+}
+th.izq.sorting.ped_fecha {
+    width: 55px!important;
+}
+th.ref {
+    width: 104px!important;
+}
+.ped_prep {
+    width: 116px!important;
+}
+td.detalle.izq .item {
+    font-weight: 500;
+}
+td.fecha_ped {
+    font-weight: 500!important;
+}
+table.prep_pedidos tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+table.prep_pedidos tbody tr:nth-child(odd) {
+    background-color: #f6fbea;
+}
+table.prep_pedidos tr:hover {
+    background-color: #d3d3d3!important;
+}
+span.estado.envio_prep {
+    padding: 6px 11px;
+    font-size: 14px!important;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+span.btn_preparado {
+    border: 1px solid #4bdf4b;
+    padding: 4px 12px;
+    color: #35471e;
+    width: 100px;
+    font-weight: 500;
+    background-color: #4bdf4b;
+    display: inline-block;
+}
+span.btn_preparado i {
+    margin-left: 5px;
+    position: relative;
+    top: -2px;
+}
+.menu-panel {
+    position: fixed;
+    top: 20px;
+    background-color: white;
+    z-index: 10;
+}
+span.fecha_preparacion {
+    font-size: 11px;
+    font-weight: 500;
+    top: 18px;
+    display: inline-block;
+}
+.btn_preparacion {
+    border: 1px solid #ffc107;
+    padding: 4px 10px;
+    color: #35471e;
+    font-weight: 500;
+    background-color: #ffc107;
+    width: 100px;
+}
+button.btn_coment {
+    padding: 4px 12px;
+    background-color: #c7c7c7;
+    border: 1px solid #c7c7c7;
+}
+button.btn_coment i {
+    font-size: 20px;
+    position: relative;
+    top: 1px;
+}
+button.btn_coment {
+    padding: 5px 12px;
+    background-color: transparent;
+    color: #3547;
+    border: 1px solid #35471e;
+}
+button.btn_coment:hover {
+    background-color: #35471e;
+    color: #fff;
+}
+p.coment_text {
+    font-size: 14px;
+    font-weight: 500;
+}
+p.coment_user {
+    font-size: 14px;
+    font-weight: 500;
+    color: #d32b2b;
+    margin-bottom: 0;
+}
+span.coment_date {
+    font-size: 11px;
+}
+p.coment_text {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+.form-group.col-md-12.nuevo_coment {
+    margin-top: 20px;
+}
+.coment_item {
+    margin: 18px 0;
+}
+p.modal-tit.coment {
+    font-size: 20px;
+    font-weight: 600;
+    color: #35471e;
+}
+span.num_coment {
+    background-color: red;
+    color: #fff;
+    padding: 0px 4px;
+    border-radius: 50%;
+    position: relative;
+    bottom: 2px;
+}
+span.btn_preparacion {
+    padding: 6px 10px;
+}
+span.btn_preparacion:hover {
+    cursor: default;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+.table.carrito i.fas.fa-check:hover {
+    cursor: default;
+}
+th.izq.ped_env, th.izq.ped_doc {
+    min-width: 94px;
+}
+a.cart_btn.btn-tabla {
+    font-size: 14px;
+    padding: 3px 10px;
+}
+.btns_funciones button.print_btn.lista {
+    left: 0;
+    bottom: 0;
+    margin-right: 30px;
+}
+span.estado.documentado {
+    background-color: #9bcbf5;
+}
+
+
+
+
+/* movil */
+@media (max-width: 768px) {
+
+body.listado-pedidos h1 {
+    visibility: visible;
+}
+body.listado-pedidos .btns_funciones {
+    display: none;
+}
+.menu-panel thead {
+    display: none;
+}
+.menu-panel {
+    overflow: auto;
+    white-space: nowrap;
+}
+.listado-pedidos .menu-panel .link .item a.nav-link {
+    padding: 9px 16px 8px 16px;
+    font-weight: 500;
+    text-align: center;
+    font-size: 13px;
+}
+.menu-panel {
+    padding: 30px 0;
+    border-top: 2px solid;
+    border-bottom: 2px solid;
+}
+.container.listado.datos.pedidos.princ {
+    margin-top: 24px!important;
+    flex-direction: column;
+}
+.container.listado.datos.pedidos table th.ref, td.ref {
+    position: sticky;
+    left: 0!important;
+    z-index: 9;
+    background-color: #ffffff!important;
+    width: 75px;
+}
+.container.listado.datos.pedidos h1 {
+    font-size: 24px;
+    padding: 0;
+    display: block;
+    color: #000;
+    text-align: center!important;
+}
+.btns_funciones {
+    text-align: right;
+    margin-bottom: 1px;
+}
+div#tbl_pedidos_wrapper .col-sm-12.col-md-6 {
+    display: flex;
+}
+div#tbl_pedidos_filter {
+    text-align: right!important;
+    margin-bottom: 24px;
+}
+button.delete {
+    border: 1px solid #e9b1b1;
+    color: #e9b1b1;
+    padding: 3px 10px 4px;
+    background-color: transparent;
+    margin-top: 60px!important;
+}
+header {
+    display: none;
+}
+body.estadisticas.listado-pedidos .btns_funciones {
+    display: block;
+    margin: 40px 0;
+}
+.color.web {
+    width: 33%;
+}
+
+}
+
+
+/* tablet */
+@media only screen and (min-width:769px) and (max-width:992px) {
+
+}
+
+
+
+@media (min-width: 993px) {
+
+.menu-lat.col-md-2 {
+    flex: 0 0 auto;
+    width: 12%;
+}
+.container .col-md-9 {
+    flex: 0 0 auto;
+    width: 79%;
+}
+
+}
+
+
+@media (min-width: 1400px) {
+
+.container.princ {
+    max-width: 95%;
+}
+
+}
+
+.menu-panel table tbody{
+    flex-wrap: nowrap !important;
+}
+
+.listado-pedidos header{
+    z-index: 0 ;
+}
+
+.menu-panel .link .item a.nav-link{
+    font-size: 14px !important;
+}
+
+#mensaje{
+    position: relative;
+    z-index: 100000 !important;
+}
+
+.overall{
+    z-index: 100000 !important;
+}
+
+.carrito .listado .row, .container.documentacion .row, .container.listado.datos .row{
+    max-width: 100%;
+}
+
+@media (max-width: 500px) {
+
+.cupones .row .offset-3{
+    margin-left: 0px !important;
+}
+
+}
+
+.col-md-9{
+    margin-top: 50px !important;
+}
+
+
+.enlace_descuento_distribuidor{
+    margin-left: 20px;
+    font-size: 14px;
+    background-color: transparent;
+    color: #fff;
+    border: none;
+    /* padding: 5px 10px; */
+    margin-bottom: 15px;
+}
+
+.enlace_descuento_distribuidor:hover{
+    background-color: white;
+}
+
+
+.enlace_descuento_distribuidor a{
+    color: white;
+    text-decoration: none !important;
+    padding: 5px 10px;
+    background-color: #35471e;
+    border: 1px solid #35471e;
+}
+
+.enlace_descuento_distribuidor a:hover{
+    color: black;
+    text-decoration: none !important;
+}

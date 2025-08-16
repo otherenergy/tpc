@@ -1,0 +1,3 @@
+Client ID: AVB9R3aWH8nXjqT2in4c1iygkLg32uyqjPIvzwdvqSjm3Pv2S9yERkkwVEpe0ZwjYHBXR3dKq73tye5g
+
+Secret key: EE8es53piZLhHlZha2YDbrrH3yJBvxh5qPDr6g7l7GdErqR63QV9ocCVB8yF4mPxYlFJEU1U_dgauXIt

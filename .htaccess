@@ -1,0 +1,19 @@
+RewriteEngine On
+
+# Asegurarse de que el .htaccess se aplique solo al directorio específico
+RewriteBase /smartcret_new/
+
+# Redirigir la raíz del directorio a /smartcret_new/es/
+RewriteCond %{REQUEST_URI} ^/smartcret_new/$
+RewriteRule ^$ /smartcret_new/es/ [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php
+
+<Files ".env">
+    Order allow,deny
+    Deny from all
+</Files>
+
+ErrorDocument 404 localhost/smartcret_new/404

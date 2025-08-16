@@ -1,0 +1,86 @@
+.menu-panel i{
+    font-size: 15px !important;
+}
+
+.menu-panel .tit{
+    display: block !important;
+}
+@media (max-width: 992px) {
+    .menu-panel .link{
+        border-bottom: none !important;
+        min-width: 85px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu-panel .link .item a.nav-link {
+        font-weight: 400;
+        text-align: center;
+        line-height: 17px;
+        font-size: 12px;
+    }
+
+    .menu-panel .link .item a.nav-link i {
+        margin-right: 0;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .menu-panel table tbody {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        flex-direction: row;
+        border-bottom: 1px solid grey;
+    }
+}
+
+.menu-panel {
+    overflow: auto;
+}
+.menu-panel table tbody{
+    flex-wrap: nowrap !important;
+}
+
+
+.boton_descarga_csv{
+    border: none;
+    border-radius: 11px;
+    background-color: #92bf23;
+    color: white;
+    padding: 5px 20px;
+}
+
+.contenedor_fechas_inicio_fin{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.contenedor_fechas_inicio_fin div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.contenedor_fechas_inicio_fin label{
+    margin-bottom: 0px !important;
+    margin-right: 4px;
+}
+.contenedor_fechas_inicio_fin input{
+    width: 110px;
+    border-radius: 4px;
+    font-size: 15px;
+    margin-right: 10px;
+    border: 1px solid grey;
+}
+
+
+@media (max-width: 768px) {
+    body.listado-pedidos h1 {
+        display: none !important;
+    }
+}

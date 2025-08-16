@@ -1,0 +1,385 @@
+<?php
+include_once ( '../../includes/array_precios.php' );
+
+include_once(dirname ( dirname ( __DIR__ ) ) . '/assets/lib/bbdd.php');
+include_once(dirname ( dirname ( __DIR__ ) ) . '/assets/lib/class.carrito.php');
+include_once(dirname ( dirname ( __DIR__ ) ) . '/assets/lib/funciones.php');
+
+
+if(isset($_REQUEST['input_presupuesto']) && $_REQUEST['input_presupuesto']=='1') {
+	$res=array();
+	$post_keys = array_keys($_REQUEST);
+	foreach( $post_keys as $key ) {
+		$$key = $_REQUEST[$key];
+		// echo $key . ' - ' . $$key . "<br>";
+	}
+}
+
+$tipo_presupuesto = array(
+													'1' => 'Microcemento',
+													'2' => 'Pintura para azulejos',
+													'3' => 'Pintura para azulejos'
+												);
+$tipo_superficie = array(
+													'1' => 'Superficies Absorbentes ( Yeso, pladur, etc )',
+													'2' => 'Superficies NO Absorbentes ( Azulejo, gres, terrazo )'
+												);
+
+/* presupuesto de microcemento */
+
+
+if ( $input_tipo_pres == 1 ) {
+
+$variante = $input_tipo_superficie;
+$color = $input_id_color;
+$acabado = $input_tipo_acabado;
+$tipo_juntas = $input_tipo_juntas;
+
+$presupuesto=array();
+
+
+
+/* calculo de kits */
+
+$num_kits = intdiv($input_m2, 8);
+$metros_sobrantes = $input_m2 % 8;
+
+if ($num_kits > 0) {
+
+$kit = obten_producto ( null, $variante, $color, $acabado, $juntas );
+
+$presupuesto['smart_kit'] = array (
+																		"nombre" => $kit->nombre_es,
+																		"cantidad" => $num_kits,
+																		"precio" => $kit->precio_es,
+																		"color" => $kit->color,
+																		"acabado" => $kit->acabado,
+																		"img" => $kit->miniatura,
+																		"id" => $kit->id
+																	);
+}
+
+/* Consumo por capa 0,9 kg/m2 0,250 kg/m2 */
+
+if ( $metros_sobrantes > 0 ) {
+
+/* Base */
+$variante=3;
+$base = obten_producto ( null, $variante, $color, null, null );
+$capas_base = 2;
+$rendimiento_base = 0.9; /* kgs/m2 */
+$capacidad_envase_base = 6; /* kgs */
+
+$envases_base = ceil ( ( $metros_sobrantes * $rendimiento_base * $capas_base ) / $capacidad_envase_base );
+
+$presupuesto['smart_base'] = array (
+																		"cantidad" => $envases_base,
+																		"nombre" => $base->nombre_es,
+																		"precio" => $base->precio_es,
+																		"color" => $base->color,
+																		"acabado" => $base->acabado,
+																		"img" => $base->miniatura,
+																		"id" => $base->id
+																		);
+
+/* Liso */
+$variante=4;
+$liso = obten_producto ( null, $variante, $color, null, null );
+$capas_liso = 2;
+$rendimiento_liso = 0.25; /* kgs/m2 */
+$capacidad_envase_liso = 6; /* kgs */
+
+$envases_liso = ceil ( ( $metros_sobrantes * $rendimiento_liso * $capas_liso ) / $capacidad_envase_liso );
+
+$presupuesto['smart_liso'] = array (
+																		"cantidad" => $envases_liso,
+																		"nombre" => $liso->nombre_es,
+																		"precio" => $liso->precio_es,
+																		"color" => $liso->color,
+																		"acabado" => $liso->acabado,
+																		"img" => $liso->miniatura,
+																		"id" => $liso->id
+																		);
+
+/* Barniz */
+$variante=8;
+$barniz = obten_producto ( null, $variante, null, $acabado, null );
+$capas_barniz = 3;
+$rendimiento_barniz = 0.066667;  /* litros/m2 */
+$capacidad_envase_barniz = 2; /* litros */
+
+$envases_barniz = ceil ( ( $metros_sobrantes * $rendimiento_barniz * $capas_barniz ) / $capacidad_envase_barniz );
+
+$presupuesto['smart_varnish'] = array (
+																				"cantidad" => $envases_barniz,
+																				"nombre" => $barniz->nombre_es,
+																				"precio" => $barniz->precio_es,
+																				"color" => $barniz->color,
+																				"acabado" => $barniz->acabado,
+																				"img" => $barniz->miniatura,
+																				"id" => $barniz->id
+																			);
+
+if ( $input_tipo_superficie == 1 ) {
+
+/* primer abs */
+$variante=6;
+$primer_abs = obten_producto ( null, $variante, null, null, null );
+$capas_primer_abs = 1;
+$rendimiento_primer_abs = 0.10; /* litros/m2 */
+$capacidad_envase_primer_abs = 1; /* litros */
+
+$envases_primer_abs = ceil ( ( $metros_sobrantes * $rendimiento_primer_abs * $capas_primer_abs ) / $capacidad_envase_primer_abs );
+
+$presupuesto['smart_primer_abs'] = array (
+																					"cantidad" => $envases_primer_abs,
+																					"nombre" => $primer_abs->nombre_es,
+																					"precio" => $primer_abs->precio_es,
+																					"color" => $primer_abs->color,
+																					"acabado" => $primer_abs->acabado,
+																					"img" => $primer_abs->miniatura,
+																					"id" => $primer_abs->id
+																					);
+
+$envases_primer_grip = 0;
+$envases_smart_jointer = 0;
+
+}else if ( $input_tipo_superficie == 2 ) {
+
+
+/* primer grip */
+
+$primer_grip = obten_producto ( 5, null, null, null, null );
+$capas_primer_grip = 1;
+$rendimiento_primer_grip = 0.12;  /* litros/m2 */
+$capacidad_envase_primer_grip = 1.333334; /* litros */
+
+$envases_primer_grip = ceil ( ( $metros_sobrantes * $rendimiento_primer_grip * $capas_primer_grip ) / $capacidad_envase_primer_grip );
+
+$presupuesto['smart_primer_grip'] = array (
+																						"cantidad" => $envases_primer_grip,
+																						"nombre" => $primer_grip->nombre_es,
+																						"precio" => $primer_grip->precio_es,
+																						"color" => $primer_grip->color,
+																						"acabado" => $primer_grip->acabado,
+																						"img" => $primer_grip->miniatura,
+																						"id" => $primer_grip->id
+																					 );
+
+/* smart jointer */
+$variante=7;
+$smart_jointer = obten_producto ( null, $variante, null, null, $juntas );
+$capas_smart_jointer = 1;
+$rendimiento_smart_jointer = 0.125;  /* kgs/m2 */
+$capacidad_envase_smart_jointer = 1; /* kilos */
+
+$envases_smart_jointer = ceil ( ( $metros_sobrantes * $rendimiento_smart_jointer * $capas_smart_jointer ) / $capacidad_envase_smart_jointer );
+
+$presupuesto['smart_jointer'] = array (
+																				"cantidad" => $envases_smart_jointer,
+																				"nombre" => $smart_jointer->nombre_es,
+																				"precio" => $smart_jointer->precio_es,
+																				"color" => $smart_jointer->color,
+																				"acabado" => $smart_jointer->acabado,
+																				"img" => $smart_jointer->miniatura,
+																				"id" => $smart_jointer->id
+																			);
+$envases_primer_abs = 0;
+
+}
+
+}
+
+$_SESSION['presupuesto'] = array();
+foreach ($presupuesto as $prod) {
+	if ( $prod['cantidad'] )	array_push ( $_SESSION['presupuesto'], $prod['id'] . '|' . $prod['cantidad'] );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+/* Presupuesto de pintura para azulejos */
+if ( $input_tipo_pres == 2 ) {
+
+
+/* calculo botes pintura */
+$variante=23;
+$base = obten_producto ( null, $variante, $color, null, null );
+
+$rendimiento_base = 0.9; /* litros/m2 */
+$capacidad_envase_base = 2.5; /* litros */
+
+$envases_base = ceil ( ( $metros_sobrantes * $rendimiento_base * $capas_base ) / $capacidad_envase_base );
+
+$presupuesto['smart_base'] = array (
+																		"cantidad" => $envases_base,
+																		"nombre" => $base->nombre_es,
+																		"precio" => $base->precio_es,
+																		"color" => $base->color,
+																		"acabado" => $base->acabado,
+																		"img" => $base->miniatura,
+																		"id" => $base->id
+																		);
+}
+
+
+$importe_total=0;
+
+?>
+		<div class="row">
+			<div class="col-md-12">
+				<h2 class="pres">Cálculo para <?php echo $input_m2 ?> m<sup>2</sup> de <?php echo $tipo_presupuesto[ $input_tipo_pres ] ?><br>
+					<?php echo ( $input_tipo_pres == 1 ) ? ' <span class="tip_pres">' . $tipo_superficie[$input_tipo_superficie] . '</span>' : '' ?>
+			  </h2>
+				<div class=" table-responsive">
+					<table class="table carrito">
+						<thead>
+							<tr>
+								<th colspan="2">Articulo</th>
+								<th class="">Unidades</th>
+								<th class="der">Precio</th>
+								<th class="der">Total</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+
+							<?php if ( isset( $presupuesto['smart_kit']) ) { ?>
+								<tr class="datos" uid="<?php echo $producto["unique_id"] ?>">
+									<td><img src="../assets/img/<?php echo $presupuesto['smart_kit']['img'] ?>" alt=""/></td>
+									<td><div class="desc"><?php echo $presupuesto['smart_kit']['nombre'] ?></div></td>
+									<td class=""><?php echo $presupuesto['smart_kit']['cantidad'] ?></td>
+									<td><?php echo $presupuesto['smart_kit']['precio'] ?>€</td>
+									<td><?php echo $presupuesto['smart_kit']['precio'] * $presupuesto['smart_kit']['cantidad'] ?>€</td>
+								</tr>
+							<?php $importe_total += ($presupuesto['smart_kit']['precio'] * $presupuesto['smart_kit']['cantidad']); ?>
+							<?php } ?>
+
+							<?php if ( isset( $presupuesto['smart_base'] ) ) { ?>
+								<tr class="datos" uid="<?php echo $producto["unique_id"] ?>">
+									<td><img src="../assets/img/<?php echo $presupuesto['smart_base']['img'] ?>" alt=""/></td>
+									<td><div class="desc"><?php echo $presupuesto['smart_base']['nombre'] ?></div></td>
+									<td class=""><?php echo $presupuesto['smart_base']['cantidad'] ?></td>
+									<td><?php echo $presupuesto['smart_base']['precio'] ?>€</td>
+									<td><?php echo $presupuesto['smart_base']['precio'] * $presupuesto['smart_base']['cantidad'] ?>€</td>
+								</tr>
+								<?php $importe_total += ($presupuesto['smart_base']['precio'] * $presupuesto['smart_base']['cantidad']); ?>
+							<?php } ?>
+
+							<?php if ( isset( $presupuesto['smart_liso'] ) ) { ?>
+								<tr class="datos" uid="<?php echo $producto["unique_id"] ?>">
+									<td><img src="../assets/img/<?php echo $presupuesto['smart_liso']['img'] ?>" alt=""/></td>
+									<td><div class="desc"><?php echo $presupuesto['smart_liso']['nombre'] ?></div></td>
+									<td class=""><?php echo $presupuesto['smart_liso']['cantidad'] ?></td>
+									<td><?php echo $presupuesto['smart_liso']['precio'] ?>€</td>
+									<td><?php echo $presupuesto['smart_liso']['precio'] * $presupuesto['smart_liso']['cantidad'] ?>€</td>
+								</tr>
+								<?php $importe_total += ( $presupuesto['smart_liso']['precio'] * $presupuesto['smart_liso']['cantidad'] ); ?>
+							<?php } ?>
+
+							<?php if ( isset( $presupuesto['smart_varnish'] ) ) { ?>
+								<tr class="datos" uid="<?php echo $producto["unique_id"] ?>">
+									<td><img src="../assets/img/<?php echo $presupuesto['smart_varnish']['img'] ?>" alt=""/></td>
+									<td><div class="desc"><?php echo $presupuesto['smart_varnish']['nombre'] ?></div></td>
+									<td class=""><?php echo $presupuesto['smart_varnish']['cantidad'] ?></td>
+									<td><?php echo $presupuesto['smart_varnish']['precio'] ?>€</td>
+									<td><?php echo $presupuesto['smart_varnish']['precio'] * $presupuesto['smart_varnish']['cantidad'] ?>€</td>
+								</tr>
+								<?php $importe_total += ( $presupuesto['smart_varnish']['precio'] * $presupuesto['smart_varnish']['cantidad'] ); ?>
+							<?php } ?>
+
+							<?php if ( isset( $presupuesto['smart_primer_abs'] ) ) { ?>
+								<tr class="datos" uid="<?php echo $producto["unique_id"] ?>">
+									<td><img src="../assets/img/<?php echo $presupuesto['smart_primer_abs']['img'] ?>" alt=""/></td>
+									<td><div class="desc"><?php echo $presupuesto['smart_primer_abs']['nombre'] ?></div></td>
+									<td class=""><?php echo $presupuesto['smart_primer_abs']['cantidad'] ?></td>
+									<td><?php echo $presupuesto['smart_primer_abs']['precio'] ?>€</td>
+									<td><?php echo $presupuesto['smart_primer_abs']['precio'] * $presupuesto['smart_primer_abs']['cantidad'] ?>€</td>
+								</tr>
+								<?php $importe_total += ( $presupuesto['smart_primer_abs']['precio'] * $presupuesto['smart_primer_abs']['cantidad'] ); ?>
+							<?php } ?>
+
+							<?php if ( isset( $presupuesto['smart_primer_grip'] ) ) { ?>
+								<tr class="datos" uid="<?php echo $producto["unique_id"] ?>">
+									<td><img src="../assets/img/<?php echo $presupuesto['smart_primer_grip']['img'] ?>" alt=""/></td>
+									<td><div class="desc"><?php echo $presupuesto['smart_primer_grip']['nombre'] ?></div></td>
+									<td class=""><?php echo $presupuesto['smart_primer_grip']['cantidad'] ?></td>
+									<td><?php echo $presupuesto['smart_primer_grip']['precio'] ?>€</td>
+									<td><?php echo $presupuesto['smart_primer_grip']['precio'] * $presupuesto['smart_primer_grip']['cantidad'] ?>€</td>
+								</tr>
+								<?php $importe_total += ( $presupuesto['smart_primer_grip']['precio'] * $presupuesto['smart_primer_grip']['cantidad'] ); ?>
+							<?php } ?>
+
+							<?php if ( isset( $presupuesto['smart_jointer'] ) ) { ?>
+								<tr class="datos" uid="<?php echo $producto["unique_id"] ?>">
+									<td><img src="../assets/img/<?php echo $presupuesto['smart_jointer']['img'] ?>" alt=""/></td>
+									<td><div class="desc"><?php echo $presupuesto['smart_jointer']['nombre'] ?></div></td>
+									<td class=""><?php echo $presupuesto['smart_jointer']['cantidad'] ?></td>
+									<td><?php echo $presupuesto['smart_jointer']['precio'] ?>€</td>
+									<td><?php echo $presupuesto['smart_jointer']['precio'] * $presupuesto['smart_jointer']['cantidad'] ?>€</td>
+								</tr>
+								<?php $importe_total += ( $presupuesto['smart_jointer']['precio'] * $presupuesto['smart_jointer']['cantidad'] ); ?>
+							<?php } ?>
+
+							<tr class="linea_total">
+								<td colspan="3" style="text-align: right;">
+								    TOTAL
+								</td>
+								<td class="total_importe" colspan="2"><?php echo formatea_importe ( $importe_total ) ?> €</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="btns">
+					<button class="delete" data-bs-toggle="tooltip" data-bs-placement="top" title="" onclick="javascript:location.reload();">Eliminar	<i class="fa fa-trash"></i>
+				</button>
+					<button type="button" class="btn palcarrito btn-lg submit" onclick="pres_to_carrito()" > <i class="fa fa-cart-plus"></i>Añadir productos al carrito</button>
+				</div>
+			</div>
+		</div>
+
+
+<?php
+
+function obten_producto ( $idProd=null, $variante=null, $color=null, $acabado=null, $juntas=null ) {
+
+	if ( isset( $variante ) && $variante != 0) {
+		$where = "WHERE es_variante='$variante'";
+		if( isset( $color ) && $color != '' ) {
+			$where .= " AND color='$color'";
+		}
+		if( isset ( $acabado ) && $acabado != '' ) {
+			$where .= " AND acabado='$acabado'";
+		}
+		if( isset ( $juntas ) && $juntas != '' ) {
+			$where .= " AND juntas='$juntas'";
+		}
+		if( isset ( $formato ) && $formato != '' ) {
+			$where .= " AND formato='$formato'";
+		}
+		$sql = "SELECT * FROM productos $where";
+		$res=consulta($sql, $conn);
+	}else if ( isset( $idProd ) && $idProd != 0 ) {
+		$where = "WHERE id ='$idProd'";
+		$sql = "SELECT * FROM productos $where";
+		$res=consulta($sql, $conn);
+	}
+
+	return $res->fetch_object();
+
+}
+
+
+?>

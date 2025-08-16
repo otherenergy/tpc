@@ -1,0 +1,141 @@
+RewriteEngine On
+#RewriteCond %{HTTP_HOST} ^smartcret.com
+#RewriteRule (.*) https://www.smartcret.com/$1 [R=301,L]
+
+#Canonical https/www
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteCond %{HTTP_HOST} ^(.*)$  [NC]
+RewriteRule (.*) https://www.%1/$1 [R=301,L]
+
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php
+
+Redirect 301 https://smartcret.com/robots.txt https://www.smartcret.com/robots.txt
+Redirect 301 /colores-smartcover https://www.smartcret.com/pintura-azulejos-smartcover
+Redirect 301 /aplicacion-smartcover-paso-paso https://www.smartcret.com/pintura-azulejos-smartcover
+Redirect 301 /preguntas-frecuentes-smartcover https://www.smartcret.com/pintura-azulejos-smartcover
+Redirect 301 /microcemento-smartcret https://www.smartcret.com/microcemento-listo-al-uso
+Redirect 301 /smartblog-noticias-smartcret/ https://www.smartcret.com/blog/
+Redirect 301 /politica-de-privacidad/ https://www.smartcret.com/politica-de-privacidad
+Redirect 301 /aplicacion-de-smartcret-paso-a-paso/ https://www.smartcret.com/microcemento-listo-al-uso
+Redirect 301 /aplicacion-smartcret-paso-paso https://www.smartcret.com/microcemento-listo-al-uso
+Redirect 301 /smartcret-elegance-collection/ https://www.smartcret.com/microcemento-listo-al-uso
+Redirect 301 /colores-smartcret https://www.smartcret.com/microcemento-listo-al-uso
+Redirect 301 /preguntas-frecuentes/ https://www.smartcret.com/microcemento-listo-al-uso
+Redirect 301 /preguntas-frecuentes-smartcret https://www.smartcret.com/microcemento-listo-al-uso
+Redirect 301 /revestimiento-decorativo-para-renovar-tu-casa https://www.smartcret.com/microcemento-listo-al-uso
+Redirect 301 /gama-productos-smartcret/ https://www.smartcret.com/tienda-microcemento
+Redirect 301 /contacta-con-nosotros-y-te-asesoraremos/ https://www.smartcret.com/contacto
+Redirect 301 /aplicacion-de-smartcret-paso-a-paso https://www.smartcret.com/microcemento-listo-al-uso
+Redirect 301 /contacta-con-nosotros-y-te-asesoraremos https://www.smartcret.com/contacto
+Redirect 301 /tienda https://www.smartcret.com/tienda-microcemento
+Redirect 301 /smart-store-smartcret-tienda-online/ https://www.smartcret.com/tienda-microcemento
+Redirect 301 /producto/smart-cleaner-limpiador-microcemento/ https://www.smartcret.com/limpiador-microcemento-smart-cleaner
+Redirect 301 /smart-cleaner https://www.smartcret.com/limpiador-microcemento-smart-cleaner
+Redirect 301 /producto/smart-jointer-tapajuntas/ https://www.smartcret.com/smart-jointer
+Redirect 301 /producto/smart-base-6kg/ https://www.smartcret.com/smart-base-6kg
+Redirect 301 /producto/smart-varnish-2l-poliuretano-monocomponente/ https://www.smartcret.com/smart-varnish
+Redirect 301 /producto/smart-kit-superficies-absorbentes https://www.smartcret.com/smart-kit-superficies-absorbentes-8-m2
+Redirect 301 /producto/smart-varnish-5l-barniz-poliuretano-al-agua/ https://www.smartcret.com/smart-varnish-5l
+Redirect 301 /producto/smart-kit-superficies-absorbentes/ https://www.smartcret.com/smart-kit-superficies-absorbentes-8-m2
+Redirect 301 /producto/disco-lija-grano-40/ https://www.smartcret.com/disco-lija-40
+Redirect 301 /producto/espatula-8cm-microcemento/ https://www.smartcret.com/espatula-microcemento
+Redirect 301 /producto/smart-primer-abs-5l-imprimacion-superficies-absorbentes/ https://www.smartcret.com/smart-primer-abs-5l
+Redirect 301 /producto/smartcret-primer-grip-superficies-no-absorbentes/ https://www.smartcret.com/smart-primer-grip
+Redirect 301 /producto/rodillo-sellador-smartcret/ https://www.smartcret.com/rodillo-sellador
+Redirect 301 /microcemento-decoracion/ https://www.smartcret.com/blog/microcemento-por-que-utilizarlo-para-decoracion
+Redirect 301 /producto/guante-lijado-smartcret/ https://www.smartcret.com/guante-lijado
+Redirect 301 /colores-microcemento/ https://www.smartcret.com/microcemento-listo-al-uso
+Redirect 301 /producto/llana-acero-inoxidable-microcemento-smartcret/ https://www.smartcret.com/llana-acero-inoxidable-microcemento
+Redirect 301 /llana-acero https://www.smartcret.com/llana-acero-inoxidable-microcemento
+Redirect 301 /producto/cubeta-plana-negra-18cm/ https://www.smartcret.com/cubeta-plastico
+Redirect 301 /producto/smart-kit-superficies-no-absorbentes-8-m2/ https://www.smartcret.com/smart-kit-superficies-no-absorbentes-8-m2
+Redirect 301 /colores-smartcret/ https://www.smartcret.com/microcemento-listo-al-uso
+Redirect 301 /faq-preguntas-frecuentes/ https://www.smartcret.com/microcemento-listo-al-uso
+Redirect 301 /producto/mango-rodillo-sellador-smartcret/ https://www.smartcret.com/mango-rodillo
+Redirect 301 /producto/cinta-adhesiva-protectora/ https://www.smartcret.com/cinta-adhesiva-protectora
+Redirect 301 /producto/smartcret-primer-abs-1l-superficies-absorbentes/ https://www.smartcret.com/smart-primer-abs
+Redirect 301 /como-aplicar-microcemento-paso-a-paso/ https://www.smartcret.com/microcemento-listo-al-uso
+Redirect 301 /producto/disco-de-lija-grano-220/ https://www.smartcret.com/disco-lija-220
+Redirect 301 /producto/smart-kit-herramientas/ https://www.smartcret.com/smart-kit-herramientas
+Redirect 301 /oficina-en-casa/ https://www.smartcret.com/blog/oficina-en-casa
+Redirect 301 /producto/smart-wax-cera-mantenimiento-microcemento/ https://www.smartcret.com/cera-mantenimiento-microcemento-smart-wax
+Redirect 301 /smart-wax https://www.smartcret.com/cera-mantenimiento-microcemento-smart-wax
+Redirect 301 /producto/smart-liso-6-kg-microcemento-listo-al-uso-pigmentado/ https://www.smartcret.com/smart-liso-6kg
+Redirect 301 /producto/disco-de-lija-grano-400/ https://www.smartcret.com/disco-lija-400
+Redirect 301 /wp-login.php?redirect_to=https%3A%2F%2Fwww.smartcret.com%2Fmicrocemento-decoracion%2F https://www.smartcret.com
+Redirect 301 /producto/llana-goma-microcemento-smartcret/ https://www.smartcret.com/llana-goma-microcemento
+Redirect 301 /llana-goma https://www.smartcret.com/llana-goma-microcemento
+Redirect 301 /aplicar-microcemento-paso-a-paso/ https://www.smartcret.com/microcemento-listo-al-uso
+Redirect 301 /blog/como-pintar-muebles-de-cocina-para-obtener-resultados-increíbles https://www.smartcret.com/blog/como-pintar-muebles-de-cocina-para-obtener-resultados-increibles
+
+Redirect 301 /blog/las-ultimas-tendencias-en-azulejos-para-cocinas-que-molan-en-2022 https://www.smartcret.com/blog/las-ultimas-tendencias-en-azulejos-para-cocinas-que-molan
+Redirect 301 /blog/como-pintar-muebles-de-cocina-para-obtener-resultados-increíbles/ https://www.smartcret.com/blog/como-pintar-muebles-de-cocina-para-obtener-resultados-increibles
+
+Redirect 301 /en/blog/microcement-in-bathrooms-a-coating-that-knows-no-limits https://www.smartcret.com/en/blog/microcement-in-bathrooms-a-coating-that-has-no-limits
+
+Redirect 301 /en/blog/remoleding-your-home-with-polished-concrete-know-all-about-it https://www.smartcret.com/en/blog/remodeling-your-home-with-polished-concrete-know-all-about-it
+
+Redirect 301 /en/store https://www.smartcret.com/en/microcement-store
+Redirect 301 /en/store/ https://www.smartcret.com/en/microcement-store
+Redirect 301 /it/negozio https://www.smartcret.com/it/negozio-microcemento
+Redirect 301 /it/negozio/ https://www.smartcret.com/it/negozio-microcemento
+Redirect 301 /fr/boutique https://www.smartcret.com/fr/boutique-beton-cire
+Redirect 301 /fr/boutique/ https://www.smartcret.com/fr/boutique-beton-cire
+
+ErrorDocument 404 https://www.smartcret.com/404
+
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/plain
+AddOutputFilterByType DEFLATE text/html
+AddOutputFilterByType DEFLATE text/xml
+AddOutputFilterByType DEFLATE text/shtml
+AddOutputFilterByType DEFLATE text/css
+AddOutputFilterByType DEFLATE application/xml
+AddOutputFilterByType DEFLATE application/xhtml+xml
+AddOutputFilterByType DEFLATE application/rss+xml
+AddOutputFilterByType DEFLATE application/javascript
+AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+ # Images
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/avif "access plus 1 year"
+  ExpiresByType image/avif-sequence "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+
+  # Video
+  ExpiresByType video/webm "access plus 1 year"
+  ExpiresByType video/mp4 "access plus 1 year"
+  ExpiresByType video/ogg "access plus 1 year"
+  ExpiresByType video/mpeg "access plus 1 year"
+
+  # Fonts
+  ExpiresByType font/ttf "access plus 1 year"
+  ExpiresByType font/otf "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType application/font-woff "access plus 1 year"
+  ExpiresByType application/vnd.ms-fontobject "access plus 1 year"
+
+  # CSS, JavaScript
+  ExpiresByType text/css "access plus 6 months"
+  ExpiresByType text/javascript "access plus 6 months"
+  ExpiresByType application/javascript "access plus 6 months"
+
+  # Others
+  ExpiresByType application/pdf "access plus 6 months"
+  ExpiresByType image/vnd.microsoft.icon "access plus 1 year"
+  ExpiresByType audio/ogg "access plus 6 months"
+</IfModule>

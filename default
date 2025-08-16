@@ -1,0 +1,881 @@
+server {
+    listen 8080;
+    listen [::]:8080;
+    server_name smartcret.es;
+
+    location ~ /\.env {
+        deny all;
+    }
+
+    return 301 $scheme://www.smartcret.es$request_uri;
+}
+
+# ------------CONFIG PROD-----------
+server {
+    listen 8080;
+    listen [::]:8080;
+    root /home/site/wwwroot/prod;
+    index index.php index.html index.htm;
+    server_name www.smartcret.es; 
+    port_in_redirect off;
+
+    location / {
+        try_files $uri $uri/ @rewriter;
+
+        if (!-e $request_filename) {
+            rewrite ^(.*)$ $1.php last;
+        }
+    }
+
+    location ~ /\.env {
+        deny all;
+    }
+
+    location @rewriter {
+        rewrite ^(.*[^/])$ $1.php last;
+
+        try_files $uri =404;
+    }
+
+    #-----------404--------------
+    location @handle404 {
+        set $lang "";
+        
+        if ($request_uri ~* ^/es/) {
+            set $lang "es";
+        }
+
+        if ($request_uri ~* ^/en-us/) {
+            set $lang "en-us";
+        }
+
+        if ($request_uri ~* ^/en-gb/) {
+            set $lang "en-gb";
+        }
+
+        if ($request_uri ~* ^/it/) {
+            set $lang "it";
+        }
+
+        if ($request_uri ~* ^/fr/) {
+            set $lang "fr";
+        }
+
+        if ($request_uri ~* ^/de/) {
+            set $lang "de";
+        }
+
+
+        if ($lang = "") {
+            # Si no se detecta ningún idioma, puedes usar un 404 predeterminado o redirigir a un idioma predeterminado.
+            return 404;
+        }
+
+        return 301 https://www.smartcret.es/$lang/404;
+    }
+
+    error_page 404 = @handle404;
+
+    #----------REDIRECCIONES---------
+    #carpeta /en/
+    location ~ ^/en(/.*)?$ {
+        return 301 https://www.smartcret.es/en-gb$1;
+    }
+    #admin
+    location /admin/index {
+        return 301 https://www.smartcret.es/admin/pedidos;
+    }
+    #otros
+    location /robots.txt {
+        return 301 https://www.smartcret.es/robots.txt;
+    }
+    location /colores-smartcover {
+        return 301 https://www.smartcret.es/pintura-azulejos-smartcover;
+    }
+    location /aplicacion-smartcover-paso-paso {
+        return 301 https://www.smartcret.es/pintura-azulejos-smartcover;
+    }
+    location /preguntas-frecuentes-smartcover {
+        return 301 https://www.smartcret.es/pintura-azulejos-smartcover;
+    }
+    location /microcemento-smartcret {
+        return 301 https://www.smartcret.es/microcemento-listo-al-uso;
+    }
+    location /smartblog-noticias-smartcret/ {
+        return 301 https://www.smartcret.es/blog/;
+    }
+    location /politica-de-privacidad/ {
+        return 301 https://www.smartcret.es/politica-de-privacidad;
+    }
+    location /aplicacion-de-smartcret-paso-a-paso/ {
+        return 301 https://www.smartcret.es/microcemento-listo-al-uso;
+    }
+    location /aplicacion-smartcret-paso-paso {
+        return 301 https://www.smartcret.es/microcemento-listo-al-uso;
+    }
+    location /smartcret-elegance-collection/ {
+        return 301 https://www.smartcret.es/microcemento-listo-al-uso;
+    }
+    location /colores-smartcret {
+        return 301 https://www.smartcret.es/microcemento-listo-al-uso;
+    }
+    location /preguntas-frecuentes/ {
+        return 301 https://www.smartcret.es/microcemento-listo-al-uso;
+    }
+    location /preguntas-frecuentes-smartcret {
+        return 301 https://www.smartcret.es/microcemento-listo-al-uso;
+    }
+    location /revestimiento-decorativo-para-renovar-tu-casa {
+        return 301 https://www.smartcret.es/microcemento-listo-al-uso;
+    }
+    location /gama-productos-smartcret/ {
+        return 301 https://www.smartcret.es/tienda-microcemento;
+    }
+    location /contacta-con-nosotros-y-te-asesoraremos/ {
+        return 301 https://www.smartcret.es/contacto;
+    }
+
+    location /aplicacion-de-smartcret-paso-a-paso {
+        return 301 https://www.smartcret.es/microcemento-listo-al-uso;
+    }
+
+    location /contacta-con-nosotros-y-te-asesoraremos {
+        return 301 https://www.smartcret.es/contacto;
+    }
+
+    location /tienda {
+        return 301 https://www.smartcret.es/tienda-microcemento;
+    }
+
+    location /smart-store-smartcret-tienda-online/ {
+        return 301 https://www.smartcret.es/tienda-microcemento;
+    }
+
+        location /producto/smart-cleaner-limpiador-microcemento/ {
+        return 301 https://www.smartcret.es/limpiador-microcemento-smart-cleaner;
+    }
+
+    location /smart-cleaner {
+        return 301 https://www.smartcret.es/limpiador-microcemento-smart-cleaner;
+    }
+
+    location /producto/smart-jointer-tapajuntas/ {
+        return 301 https://www.smartcret.es/smart-jointer;
+    }
+
+    location /producto/smart-base-6kg/ {
+        return 301 https://www.smartcret.es/smart-base-6kg;
+    }
+
+    location /producto/smart-varnish-2l-poliuretano-monocomponente/ {
+        return 301 https://www.smartcret.es/smart-varnish;
+    }
+
+    location /producto/smart-kit-superficies-absorbentes {
+        return 301 https://www.smartcret.es/smart-kit-superficies-absorbentes-8-m2;
+    }
+
+    location /producto/smart-varnish-5l-barniz-poliuretano-al-agua/ {
+        return 301 https://www.smartcret.es/smart-varnish-5l;
+    }
+
+    location /producto/smart-kit-superficies-absorbentes/ {
+        return 301 https://www.smartcret.es/smart-kit-superficies-absorbentes-8-m2;
+    }
+
+    location /producto/disco-lija-grano-40/ {
+        return 301 https://www.smartcret.es/disco-lija-40;
+    }
+
+    location /producto/espatula-8cm-microcemento/ {
+        return 301 https://www.smartcret.es/espatula-microcemento;
+    }
+
+    location /producto/smart-primer-abs-5l-imprimacion-superficies-absorbentes/ {
+        return 301 https://www.smartcret.es/smart-primer-abs-5l;
+    }
+
+    location /producto/smartcret-primer-grip-superficies-no-absorbentes/ {
+        return 301 https://www.smartcret.es/smart-primer-grip;
+    }
+
+    location /producto/rodillo-sellador-smartcret/ {
+        return 301 https://www.smartcret.es/rodillo-sellador;
+    }
+
+    location /microcemento-decoracion/ {
+        return 301 https://www.smartcret.es/blog/microcemento-por-que-utilizarlo-para-decoracion;
+    }
+
+    location /producto/guante-lijado-smartcret/ {
+        return 301 https://www.smartcret.es/guante-lijado;
+    }
+
+    location /colores-microcemento/ {
+        return 301 https://www.smartcret.es/microcemento-listo-al-uso;
+    }
+
+    location /producto/llana-acero-inoxidable-microcemento-smartcret/ {
+        return 301 https://www.smartcret.es/llana-acero-inoxidable-microcemento;
+    }
+
+    location /llana-acero {
+        return 301 https://www.smartcret.es/llana-acero-inoxidable-microcemento;
+    }
+
+    location /producto/cubeta-plana-negra-18cm/ {
+        return 301 https://www.smartcret.es/cubeta-plastico;
+    }
+
+    location /producto/smart-kit-superficies-no-absorbentes-8-m2/ {
+        return 301 https://www.smartcret.es/smart-kit-superficies-no-absorbentes-8-m2;
+    }
+
+    location /colores-smartcret/ {
+        return 301 https://www.smartcret.es/microcemento-listo-al-uso;
+    }
+
+    location /faq-preguntas-frecuentes/ {
+        return 301 https://www.smartcret.es/microcemento-listo-al-uso;
+    }
+
+    location /producto/mango-rodillo-sellador-smartcret/ {
+        return 301 https://www.smartcret.es/mango-rodillo;
+    }
+
+    location /producto/cinta-adhesiva-protectora/ {
+        return 301 https://www.smartcret.es/cinta-adhesiva-protectora;
+    }
+
+    location /producto/smartcret-primer-abs-1l-superficies-absorbentes/ {
+        return 301 https://www.smartcret.es/smart-primer-abs;
+    }
+
+    location /como-aplicar-microcemento-paso-a-paso/ {
+        return 301 https://www.smartcret.es/microcemento-listo-al-uso;
+    }
+
+    location /producto/disco-de-lija-grano-220/ {
+        return 301 https://www.smartcret.es/disco-lija-220;
+    }
+
+    location /producto/smart-kit-herramientas/ {
+        return 301 https://www.smartcret.es/smart-kit-herramientas;
+    }
+
+    location /oficina-en-casa/ {
+        return 301 https://www.smartcret.es/blog/oficina-en-casa;
+    }
+
+    location /producto/smart-wax-cera-mantenimiento-microcemento/ {
+        return 301 https://www.smartcret.es/cera-mantenimiento-microcemento-smart-wax;
+    }
+
+    location /smart-wax {
+        return 301 https://www.smartcret.es/cera-mantenimiento-microcemento-smart-wax;
+    }
+
+    location /producto/smart-liso-6-kg-microcemento-listo-al-uso-pigmentado/ {
+        return 301 https://www.smartcret.es/smart-liso-6kg;
+    }
+
+    location /producto/disco-de-lija-grano-400/ {
+        return 301 https://www.smartcret.es/disco-lija-400;
+    }
+
+    location /wp-login.php {
+        return 301 https://www.smartcret.es;
+    }
+
+    location /producto/llana-goma-microcemento-smartcret/ {
+        return 301 https://www.smartcret.es/llana-goma-microcemento;
+    }
+
+    location /llana-goma {
+        return 301 https://www.smartcret.es/llana-goma-microcemento;
+    }
+
+    location /aplicar-microcemento-paso-a-paso/ {
+        return 301 https://www.smartcret.es/microcemento-listo-al-uso;
+    }
+
+    location /blog/como-pintar-muebles-de-cocina-para-obtener-resultados-increíbles {
+        return 301 https://www.smartcret.es/blog/como-pintar-muebles-de-cocina-para-obtener-resultados-increibles;
+    }
+
+    location /blog/las-ultimas-tendencias-en-azulejos-para-cocinas-que-molan-en-2022 {
+        return 301 https://www.smartcret.es/blog/las-ultimas-tendencias-en-azulejos-para-cocinas-que-molan;
+    }
+
+    location /blog/como-pintar-muebles-de-cocina-para-obtener-resultados-increíbles/ {
+        return 301 https://www.smartcret.es/blog/como-pintar-muebles-de-cocina-para-obtener-resultados-increibles;
+    }
+
+    location /en/blog/microcement-in-bathrooms-a-coating-that-knows-no-limits {
+        return 301 https://www.smartcret.es/en/blog/microcement-in-bathrooms-a-coating-that-has-no-limits;
+    }
+
+    location /en/blog/remoleding-your-home-with-polished-concrete-know-all-about-it {
+        return 301 https://www.smartcret.es/en/blog/remodeling-your-home-with-polished-concrete-know-all-about-it;
+    }
+
+    location /en/store {
+        return 301 https://www.smartcret.es/en/microcement-store;
+    }
+
+    location /en-us/store {
+        return 301 https://www.smartcret.es/en-us/microcement-store;
+    }
+
+    # location /it/negozio {
+    #     return 301 https://www.smartcret.es/it/negozio-microcemento;
+    # }
+
+    # location /fr/boutique {
+    #     return 301 https://www.smartcret.es/fr/boutique-beton-cire;
+    # }
+
+    # location /de/geschaft-mikrozement {
+    #     return 301 https://www.smartcret.es/de/shop-mikrozement;
+    # }
+
+    location /de/cemento-stampato {
+        return 301 https://www.smartcret.es/de/bedruckter-beton;
+    }
+
+    location /en/ready-to-use-microcement {
+        return 301 https://www.smartcret.es/en/smartcret-ready-to-use-microcement;
+    }
+
+    location /en-us/ready-to-use-microcement {
+        return 301 https://www.smartcret.es/en-us/smartcret-ready-to-use-microcement;
+    }
+
+    location /llana-acero-inoxidable-microcemento {
+        return 301 https://www.smartcret.es/llana-de-policarbonato-para-microcemento;
+    }
+
+    location /llana-goma-microcemento {
+        return 301 https://www.smartcret.es/llana-de-policarbonato-para-microcemento;
+    }
+    location /assets/img/blog/como-pintar-muebles-de-cocina-para-obtener-resultados-increíbles.jpg {
+        return 301 https://www.smartcret.es/assets/img/blog/como-pintar-muebles-de-cocina-para-obtener-resultados-increibles.jpg;
+    }
+    
+    location /assets/img/blog/6-ideas-pintar-azulejos-baño.jpg {
+        return 301 https://www.smartcret.es/assets/img/blog/6-ideas-pintar-azulejos-bano.jpg;
+    }
+
+    location /assets/img/blog/pintar-azulejos-baño-blanco.jpg {
+        return 301 https://www.smartcret.es/assets/img/blog/pintar-azulejos-bano-blanco.jpg;
+    }
+
+    location /assets/img/blog/cocina_distribución_L.jpg {
+        return 301 https://www.smartcret.es/assets/img/blog/cocina_distribucion_l.jpg;
+    }
+
+    location /assets/img/blog/pintura-azulejos-baño-gris.jpg {
+        return 301 https://www.smartcret.es/assets/img/blog/pintura-azulejos-bano-gris.jpg;
+    }
+
+    location /assets/img/blog/pintar-azulejos-baño-gris.jpg {
+        return 301 https://www.smartcret.es/assets/img/blog/pintar-azulejos-bano-gris.jpg;
+    }
+
+    location /assets/img/blog/despues-pintar-azulejos-baño.png {
+        return 301 https://www.smartcret.es/assets/img/blog/despues-pintar-azulejos-bano.png;
+    }
+
+    location /assets/img/blog/pintura-azulejos-baño-color-antracita.jpg {
+        return 301 https://www.smartcret.es/assets/img/blog/pintura-azulejos-bano-color-antracita.jpg;
+    }
+
+    location /assets/img/blog/isla_cocina_pequeña.jpg {
+        return 301 https://www.smartcret.es/assets/img/blog/isla_cocina_pequena.jpg;
+    }
+
+    location /assets/img/blog/antes-pintar-azulejos-baño.png {
+        return 301 https://www.smartcret.es/assets/img/blog/antes-pintar-azulejos-bano.png;
+    }
+
+    location /assets/img/blog/piso-pequeno-con-suelo-vinílico-en-el-salon.jpg {
+        return 301 https://www.smartcret.es/assets/img/blog/piso-pequeno-con-suelo-vinilico-en-el-salon.jpg;
+    }
+
+    location /assets/img/blog/cocina_pequeña_u.jpg {
+        return 301 https://www.smartcret.es/assets/img/blog/cocina_pequena_u.jpg;
+    }
+
+    location /assets/img/blog/pintura-azulejos-baño-negro.jpg {
+        return 301 https://www.smartcret.es/assets/img/blog/pintura-azulejos-bano-negro.jpg;
+    }
+
+    location /assets/img/blog/pintura-azulejos-baño-marron.jpg {
+        return 301 https://www.smartcret.es/assets/img/blog/pintura-azulejos-bano-marron.jpg;
+    }
+
+    location /assets/img/blog/cocina_abierta_salón.jpg {
+        return 301 https://www.smartcret.es/assets/img/blog/cocina_abierta_salon.jpg;
+    }
+    location /en/stainless-steel-trowel {
+        return 301 https://www.smartcret.es/en/polycarbonate-trowel-for-microcement;
+    }
+
+    location /en/rubber-trowel {
+        return 301 https://www.smartcret.es/en/polycarbonate-trowel-for-microcement;
+    }
+
+    location /en-us/stainless-steel-trowel {
+        return 301 https://www.smartcret.es/en-us/polycarbonate-trowel-for-microcement;
+    }
+
+    location /en-us/rubber-trowel {
+        return 301 https://www.smartcret.es/en-us/polycarbonate-trowel-for-microcement;
+    }
+    
+    location /fr/taloche-acier {
+        return 301 https://www.smartcret.es/fr/truelle-polycarbonate-pour-beton-cire;
+    }
+
+    location /fr/taloche-caoutchouc {
+        return 301 https://www.smartcret.es/fr/truelle-polycarbonate-pour-beton-cire;
+    }
+
+    location /it/frattazzo-acciaio-inox {
+        return 301 https://www.smartcret.es/it/cazzuola-in-policarbonato-per-microcemento;
+    }
+
+    location /it/frattazzo-gomma {
+        return 301 https://www.smartcret.es/it/cazzuola-in-policarbonato-per-microcemento;
+    }
+
+    location /blog/las-3bs-del-hormigon-impreso-madera {
+        return 301 https://www.smartcret.es/blog/hormigon-impreso-imitacion-madera-las-claves-de-un-material-de-exito;
+    }
+    
+    location /de/Datenschutzrichtlinie {
+        return 301 https://www.smartcret.es/de/datenschutzrichtlinie;
+    }
+    
+    # Nuevos redireccionamientos añadidos el 30/01/2024
+    location /it/smart-Kit-microcemento-superfici-assorbenti-8-m2 {
+        return 301 https://www.smartcret.es/it/smart-kit-microcemento-superfici-assorbenti-8-m2;
+    }
+
+    location /producto/smart-varnish-2l-poliuretano-monocomponente {
+        return 301 https://www.smartcret.es/smart-varnish;
+    }
+    
+    location /en/blog/best-kitchen-tiles-ideas-for-2022-start-now-your-DIY-project {
+        return 301 https://www.smartcret.es/en/blog/best-kitchen-tiles-ideas-for-2022-start-now-your-diy-project;
+    }
+
+    location /en-us/blog/best-kitchen-tiles-ideas-for-2022-start-now-your-DIY-project {
+        return 301 https://www.smartcret.es/en-us/blog/best-kitchen-tiles-ideas-for-2022-start-now-your-diy-project;
+    }
+    
+    #CAMBIO A /ES/
+    location /microcemento-listo-al-uso {
+        return 301 https://www.smartcret.es/es/microcemento-listo-al-uso;
+    }
+    location /pintura-azulejos-smartcover {
+        return 301 https://www.smartcret.es/es/pintura-azulejos-smartcover;
+    }
+    location /hormigon-impreso {
+        return 301 https://www.smartcret.es/es/hormigon-impreso;
+    }
+    location /tienda-microcemento {
+        return 301 https://www.smartcret.es/es/tienda-microcemento;
+    }
+    location /blog {
+        return 301 https://www.smartcret.es/es/blog;
+    }
+    location /pintura-smartcover {
+        return 301 https://www.smartcret.es/es/pintura-smartcover;
+    }
+    location /smart-kit-superficies-absorbentes-8-m2 {
+        return 301 https://www.smartcret.es/es/smart-kit-superficies-absorbentes-8-m2;
+    }
+    location /smart-kit-superficies-no-absorbentes-8-m2 {
+        return 301 https://www.smartcret.es/es/smart-kit-superficies-no-absorbentes-8-m2;
+    }
+    location /super-kit-superficies-no-absorbentes-16-m2 {
+        return 301 https://www.smartcret.es/es/super-kit-superficies-no-absorbentes-16-m2;
+    }
+    location /super-kit-superficies-absorbentes-16-m2 {
+        return 301 https://www.smartcret.es/es/super-kit-superficies-absorbentes-16-m2;
+    }
+    location /smart-base-6kg {
+        return 301 https://www.smartcret.es/es/smart-base-6kg;
+    }
+    location /smartcover-repair {
+        return 301 https://www.smartcret.es/es/smartcover-repair;
+    }
+    location /smart-jointer {
+        return 301 https://www.smartcret.es/es/smart-jointer;
+    }
+    location /smart-primer-abs {
+        return 301 https://www.smartcret.es/es/smart-primer-abs;
+    }
+    location /smart-primer-grip {
+        return 301 https://www.smartcret.es/es/smart-primer-grip;
+    }
+    location /smart-varnish {
+        return 301 https://www.smartcret.es/es/smart-varnish;
+    }
+    location /smart-varnish-repair {
+        return 301 https://www.smartcret.es/es/smart-varnish-repair;
+    }
+    location /limpiador-microcemento-smart-cleaner {
+        return 301 https://www.smartcret.es/es/limpiador-microcemento-smart-cleaner;
+    }
+    location /cera-mantenimiento-microcemento-smart-wax {
+        return 301 https://www.smartcret.es/es/cera-mantenimiento-microcemento-smart-wax;
+    }
+    location /smart-kit-herramientas {
+        return 301 https://www.smartcret.es/es/smart-kit-herramientas;
+    }
+    location /disco-lija-40 {
+        return 301 https://www.smartcret.es/es/disco-lija-40;
+    }
+    location /disco-lija-220 {
+        return 301 https://www.smartcret.es/es/disco-lija-220;
+    }
+    location /disco-lija-400 {
+        return 301 https://www.smartcret.es/es/disco-lija-400;
+    }
+    location /guante-lijado {
+        return 301 https://www.smartcret.es/es/guante-lijado;
+    }
+    location /espatula-microcemento {
+        return 301 https://www.smartcret.es/es/espatula-microcemento;
+    }
+    location /cinta-adhesiva-protectora {
+        return 301 https://www.smartcret.es/es/cinta-adhesiva-protectora;
+    }
+    location /llana-de-policarbonato-para-microcemento {
+        return 301 https://www.smartcret.es/es/llana-de-policarbonato-para-microcemento;
+    }
+    location /smart-roller {
+        return 301 https://www.smartcret.es/es/smart-roller;
+    }
+    location /cubeta-plastico {
+        return 301 https://www.smartcret.es/es/cubeta-plastico;
+    }
+    location /mango-rodillo {
+        return 301 https://www.smartcret.es/es/mango-rodillo;
+    }
+    location /rodillo-sellador {
+        return 301 https://www.smartcret.es/es/rodillo-sellador;
+    }
+    location /microcemento-por-que-utilizarlo-para-decoracion {
+        return 301 https://www.smartcret.es/es/microcemento-por-que-utilizarlo-para-decoracion;
+    }
+    location /13-ideas-para-triunfar-en-la-reforma-de-un-bano-pequeno {
+        return 301 https://www.smartcret.es/es/13-ideas-para-triunfar-en-la-reforma-de-un-bano-pequeno;
+    }
+    location /5-muebles-microcemento-para-casa {
+        return 301 https://www.smartcret.es/es/5-muebles-microcemento-para-casa;
+    }
+    location /6-ideas-pintar-azulejos-bano-forma-facil-barata {
+        return 301 https://www.smartcret.es/es/6-ideas-pintar-azulejos-bano-forma-facil-barata;
+    }
+    location /8-ideas-para-pintar-paredes-de-forma-original-y-renovar-tu-casa {
+        return 301 https://www.smartcret.es/es/8-ideas-para-pintar-paredes-de-forma-original-y-renovar-tu-casa;
+    }
+    location /cemento-decorativo-un-revestimiento-industrial-con-multiples-facetas {
+        return 301 https://www.smartcret.es/es/cemento-decorativo-un-revestimiento-industrial-con-multiples-facetas;
+    }
+    location /colores-hormigon-impreso-un-mundo-de-luz-y-de-color {
+        return 301 https://www.smartcret.es/es/colores-hormigon-impreso-un-mundo-de-luz-y-de-color;
+    }
+    location /como-decorar-un-salon-pequeno-ideas-y-consejos-para-copiar {
+        return 301 https://www.smartcret.es/es/como-decorar-un-salon-pequeno-ideas-y-consejos-para-copiar;
+    }
+    location /como-decorar-una-cocina-pequena-ideas-para-optimizar-el-espacio {
+        return 301 https://www.smartcret.es/es/como-decorar-una-cocina-pequena-ideas-para-optimizar-el-espacio;
+    }
+    location /como-decorar-una-habitacion-tips-de-decoradores-interioristas {
+        return 301 https://www.smartcret.es/es/como-decorar-una-habitacion-tips-de-decoradores-interioristas;
+    }
+    location /como-pintar-azulejos-de-cocina-y-darle-un-aire-renovado {
+        return 301 https://www.smartcret.es/es/como-pintar-azulejos-de-cocina-y-darle-un-aire-renovado;
+    }
+    location /como-pintar-baldosas-del-bano-para-actualizarlo-pasos-y-trucos {
+        return 301 https://www.smartcret.es/es/como-pintar-baldosas-del-bano-para-actualizarlo-pasos-y-trucos;
+    }
+    location /como-pintar-muebles-de-cocina-para-obtener-resultados-increíbles {
+        return 301 https://www.smartcret.es/es/como-pintar-muebles-de-cocina-para-obtener-resultados-increíbles;
+    }
+    location /como-reparar-hormigon-impreso-de-forma-facil-con-tus-propias-manos {
+        return 301 https://www.smartcret.es/es/como-reparar-hormigon-impreso-de-forma-facil-con-tus-propias-manos;
+    }
+    location /consejos-practicos-para-evitar-problemas-de-microcemento {
+        return 301 https://www.smartcret.es/es/consejos-practicos-para-evitar-problemas-de-microcemento;
+    }
+    location /cuanto-cuesta-el-hormigon-impreso {
+        return 301 https://www.smartcret.es/es/cuanto-cuesta-el-hormigon-impreso;
+    }
+    location /cuidar-limpiar-microcemento-mejores-trucos {
+        return 301 https://www.smartcret.es/es/cuidar-limpiar-microcemento-mejores-trucos;
+    }
+    location /decoracion-de-pisos-pequenos-ideas-consejos-y-errores-a-evitar {
+        return 301 https://www.smartcret.es/es/decoracion-de-pisos-pequenos-ideas-consejos-y-errores-a-evitar;
+    }
+    location /descubre-el-pavimento-impreso-y-enamorate {
+        return 301 https://www.smartcret.es/es/descubre-el-pavimento-impreso-y-enamorate;
+    }
+    location /el-microcemento-en-banos-revestimiento-sin-limites {
+        return 301 https://www.smartcret.es/es/el-microcemento-en-banos-revestimiento-sin-limites;
+    }
+    location /el-precio-del-microcemento-a-examen {
+        return 301 https://www.smartcret.es/es/el-precio-del-microcemento-a-examen;
+    }
+    location /eleva-tu-estilo-a-nuevas-alturas-con-el-hormigon-impreso-vertical {
+        return 301 https://www.smartcret.es/es/eleva-tu-estilo-a-nuevas-alturas-con-el-hormigon-impreso-vertical;
+    }
+    location /escaleras-de-microcemento-conoce-la-estetica-que-marca-la-diferencia {
+        return 301 https://www.smartcret.es/es/escaleras-de-microcemento-conoce-la-estetica-que-marca-la-diferencia;
+    }
+    location /estilo-nordico-aprende-a-decorar-con-armonia-y-equilibrio {
+        return 301 https://www.smartcret.es/es/estilo-nordico-aprende-a-decorar-con-armonia-y-equilibrio;
+    }
+    location /estuco-veneciano-la-tecnica-decorativa-que-no-pasa-de-moda {
+        return 301 https://www.smartcret.es/es/estuco-veneciano-la-tecnica-decorativa-que-no-pasa-de-moda;
+    }
+    location /hormigon-impreso-imitacion-madera-las-claves-de-un-material-de-exito {
+        return 301 https://www.smartcret.es/es/hormigon-impreso-imitacion-madera-las-claves-de-un-material-de-exito;
+    }
+    location /hormigon-impreso-moderno-practico-y-mucho-mas {
+        return 301 https://www.smartcret.es/es/hormigon-impreso-moderno-practico-y-mucho-mas;
+    }
+    location /las-ultimas-tendencias-en-azulejos-para-cocinas-que-molan-en-2022 {
+        return 301 https://www.smartcret.es/es/las-ultimas-tendencias-en-azulejos-para-cocinas-que-molan-en-2022;
+    }
+    location /lo-mas-top-del-hormigon-impreso-en-piscinas {
+        return 301 https://www.smartcret.es/es/lo-mas-top-del-hormigon-impreso-en-piscinas;
+    }
+    location /microcemento-en-paredes-como-reformar-tu-casa-por-ti-mismo {
+        return 301 https://www.smartcret.es/es/microcemento-en-paredes-como-reformar-tu-casa-por-ti-mismo;
+    }
+    location /microcemento-en-suelo-el-material-que-necesita-tu-hogar {
+        return 301 https://www.smartcret.es/es/microcemento-en-suelo-el-material-que-necesita-tu-hogar;
+    }
+    # location /microcemento-por-que-utilizarlo-para-decoracion {
+    #     return 301 https://www.smartcret.es/es/microcemento-por-que-utilizarlo-para-decoracion;
+    # }
+    location /microcemento-suelo-cocina-todo-ventajas {
+        return 301 https://www.smartcret.es/es/microcemento-suelo-cocina-todo-ventajas;
+    }
+    location /moldes-para-hormigon-impreso {
+        return 301 https://www.smartcret.es/es/moldes-para-hormigon-impreso;
+    }
+    location /oficina-en-casa {
+        return 301 https://www.smartcret.es/es/oficina-en-casa;
+    }
+    location /pintar-hormigon-impreso-sin-morir-en-el-intento {
+        return 301 https://www.smartcret.es/es/pintar-hormigon-impreso-sin-morir-en-el-intento;
+    }
+    location /por-que-en-smartcret-no-necesitas-malla-para-microcemento {
+        return 301 https://www.smartcret.es/es/por-que-en-smartcret-no-necesitas-malla-para-microcemento;
+    }
+    location /reformar-bano-sin-obras {
+        return 301 https://www.smartcret.es/es/reformar-bano-sin-obras;
+    }
+    location /reformar-cocina-sin-obras {
+        return 301 https://www.smartcret.es/es/reformar-cocina-sin-obras;
+    }
+    location /reformar-el-bano-sin-quitar-los-azulejos-es-posible {
+        return 301 https://www.smartcret.es/es/reformar-el-bano-sin-quitar-los-azulejos-es-posible;
+    }
+    location /reformar-tu-casa-con-cemento-pulido-todo-lo-que-has-de-saber {
+        return 301 https://www.smartcret.es/es/reformar-tu-casa-con-cemento-pulido-todo-lo-que-has-de-saber;
+    }
+    location /resina-para-hormigon-impreso {
+        return 301 https://www.smartcret.es/es/resina-para-hormigon-impreso;
+    }
+    location /revestimiento-de-pared-alternativas-baratas-rapidas-de-alta-calidad {
+        return 301 https://www.smartcret.es/es/revestimiento-de-pared-alternativas-baratas-rapidas-de-alta-calidad;
+    }
+    location /tips-utiles-para-garantizar-el-buen-mantenimiento-del-hormigon-impreso {
+        return 301 https://www.smartcret.es/es/tips-utiles-para-garantizar-el-buen-mantenimiento-del-hormigon-impreso;
+    }
+    location /ultimas-tendencias-en-decoracion-de-dormitorios-de-matrimonio-6-ideas {
+        return 301 https://www.smartcret.es/es/ultimas-tendencias-en-decoracion-de-dormitorios-de-matrimonio-6-ideas;
+    }
+    location /usar-microcemento-en-la-cocina-inspirate-para-tu-proxima-reforma {
+        return 301 https://www.smartcret.es/es/usar-microcemento-en-la-cocina-inspirate-para-tu-proxima-reforma;
+    }
+    location /5-ideas-para-paredes-de-microcemento-en-el-bano {
+        return 301 https://www.smartcret.es/es/5-ideas-para-paredes-de-microcemento-en-el-bano;
+    }
+    location /fabricante-microcemento {
+        return 301 https://www.smartcret.es/es/fabricante-microcemento;
+    }
+    location /distribuidores {
+        return 301 https://www.smartcret.es/es/distribuidores;
+    }
+    location /calculadora-presupuestos {
+        return 301 https://www.smartcret.es/es/calculadora-presupuestos;
+    }
+    location /contacto {
+        return 301 https://www.smartcret.es/es/contacto;
+    }
+    location /politica-privacidad {
+        return 301 https://www.smartcret.es/es/politica-privacidad;
+    }
+    location /politica-de-venta-y-devoluciones {
+        return 301 https://www.smartcret.es/es/politica-de-venta-y-devoluciones;
+    }
+    location /reformas-diy {
+        return 301 https://www.smartcret.es/es/reformas-diy;
+    }
+    location /login {
+        return 301 https://www.smartcret.es/es/login;
+    }
+    location /signup {
+        return 301 https://www.smartcret.es/es/signup;
+    }
+    location /reset-password {
+        return 301 https://www.smartcret.es/es/reset-password;
+    }
+    location /password-recovery {
+        return 301 https://www.smartcret.es/es/password-recovery;
+    }
+    location /mini-kit-con-juntas-4-m2 {
+        return 301 https://www.smartcret.es/es/mini-kit-con-juntas-4-m2;
+    }
+    location /mini-kit-sin-juntas-4-m2 {
+        return 301 https://www.smartcret.es/es/mini-kit-sin-juntas-4-m2;
+    }
+    location /mega-kit-con-juntas-24-m2 {
+        return 301 https://www.smartcret.es/es/mega-kit-con-juntas-24-m2;
+    }
+    location /mega-kit-sin-juntas-24-m2 {
+        return 301 https://www.smartcret.es/es/mega-kit-sin-juntas-24-m2;
+    }
+    location /smart-container {
+        return 301 https://www.smartcret.es/es/smart-container;
+    }
+    location /mis-pedidos {
+        return 301 https://www.smartcret.es/es/mis-pedidos;
+    }
+    location /mis-datos {
+        return 301 https://www.smartcret.es/es/mis-datos;
+    }
+    location /kits-microcemento-banos-duchas-cocinas {
+        return 301 https://www.smartcret.es/es/kits-microcemento-banos-duchas-cocinas;
+    }
+    location /kits-microcemento-paredes {
+        return 301 https://www.smartcret.es/es/kits-microcemento-paredes;
+    }
+    location /mini-kit-microcemento-paredes-6m2 {
+        return 301 https://www.smartcret.es/es/mini-kit-microcemento-paredes-6m2;
+    }
+    location /smart-kit-microcemento-paredes-12m2 {
+        return 301 https://www.smartcret.es/es/smart-kit-microcemento-paredes-12m2;
+    }
+    location /super-kit-microcemento-paredes-18m2 {
+        return 301 https://www.smartcret.es/es/super-kit-microcemento-paredes-18m2;
+    }
+    location /mega-kit-microcemento-paredes-24m2 {
+        return 301 https://www.smartcret.es/es/mega-kit-microcemento-paredes-24m2;
+    }
+    location /smart-primer-plus {
+        return 301 https://www.smartcret.es/es/smart-primer-plus;
+    }
+    location /smart-booster {
+        return 301 https://www.smartcret.es/es/smart-booster;
+    }
+
+    # redirect server error pages to the static page /50x.html
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /html/;
+    }
+    
+    # Disable .git directory
+    location ~ /\.git {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+
+    # Add locations of phpmyadmin here.
+    location ~* [^/]\.php(/|$) {
+        fastcgi_split_path_info ^(.+?\.[Pp][Hh][Pp])(|/.*)$;
+        fastcgi_pass 127.0.0.1:9000;
+        include fastcgi_params;
+        fastcgi_param HTTP_PROXY "";
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_param QUERY_STRING $query_string;
+        fastcgi_intercept_errors on;
+        fastcgi_connect_timeout         300; 
+        fastcgi_send_timeout           3600; 
+        fastcgi_read_timeout           3600;
+        fastcgi_buffer_size 128k;
+        fastcgi_buffers 4 256k;
+        fastcgi_busy_buffers_size 256k;
+        fastcgi_temp_file_write_size 256k;
+    }
+}
+
+# ------------CONFIG DEV-----------
+server {
+    #proxy_cache cache;
+    #proxy_cache_valid 200 1s;
+    listen 8080;
+    listen [::]:8080;
+    root /home/site/wwwroot/dev;
+    index index.php index.html index.htm;
+    server_name dev.smartcret.es; 
+    port_in_redirect off;
+
+    location / {
+        try_files $uri $uri/ @rewriter;
+
+
+        if (!-e $request_filename) {
+            rewrite ^(.*)$ $1.php last;
+        }
+    }
+
+    location @rewriter {
+        rewrite ^(.*[^/])$ $1.php last;
+
+        try_files $uri =404;
+    }
+
+    # redirect server error pages to the static page /50x.html
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /html/;
+    }
+    
+    # Disable .git directory
+    location ~ /\.git {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+
+    # Add locations of phpmyadmin here.
+    location ~* [^/]\.php(/|$) {
+        fastcgi_split_path_info ^(.+?\.[Pp][Hh][Pp])(|/.*)$;
+        fastcgi_pass 127.0.0.1:9000;
+        include fastcgi_params;
+        fastcgi_param HTTP_PROXY "";
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_param QUERY_STRING $query_string;
+        fastcgi_intercept_errors on;
+        fastcgi_connect_timeout         300; 
+        fastcgi_send_timeout           3600; 
+        fastcgi_read_timeout           3600;
+        fastcgi_buffer_size 128k;
+        fastcgi_buffers 4 256k;
+        fastcgi_busy_buffers_size 256k;
+        fastcgi_temp_file_write_size 256k;
+    }
+}

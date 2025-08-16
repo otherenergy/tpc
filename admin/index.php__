@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<title>Reforma sin obras y económica con Smartcret</title>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="language" content="es-ES">
+		<!-- Etiquetas META SEO -->
+		<meta name="robots" content="index,follow">
+		<meta name="description" content="Descubre cómo realizar una reforma sin obras de manera fácil, rápida y sin generar escombros. Únete a la revolución del mundo de la decoración con Smartcret.">
+		<meta property="og:locale" content="es_ES">
+		<meta property="og:type" content="website">
+		<meta property="og:title" content="Reforma sin obras y económica con Smartcret">
+		<meta property="og:description" content="Descubre cómo realizar una reforma sin obras de manera fácil, rápida y sin generar escombros. Únete a la revolución del mundo de la decoración con Smartcret.">
+		<meta property="og:url" content="https://www.smartcret.com">
+		<meta property="og:site_name" content="Smartcret">
+		<meta name="twitter:card" content="summary">
+		<meta name="twitter:title" content="Reforma sin obras y económica con Smartcret">
+		<meta name="twitter:description" content="Descubre cómo realizar una reforma sin obras de manera fácil, rápida y sin generar escombros. Únete a la revolución del mundo de la decoración con Smartcret.">
+		<meta name="twitter:site" content="https://www.smartcret.com">
+		<meta name="twitter:creator" content="@SmartcretD">
+		<?php include_once ( './includes/bloque_canonical.php' ) ?>
+
+		<!-- Estilos CSS -->
+		<link rel='stylesheet' href='assets/css/smart_style.css?<?php echo rand() ?>' type='text/css' />
+		<link rel='stylesheet' href='cookies/cookies.css' type='text/css' />
+		<link rel="icon" href="assets/img/favicon.png">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-169820052-1"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+		  gtag('config', 'UA-169820052-1');
+		  gtag('config', 'AW-1001206950');
+		</script>
+		
+	</head>
+	<body class="home">
+	<!-- Header - Inicio -->
+	<?php include('includes/header.php'); ?>
+	<!-- Header - Fin -->
+	<?php if ( programacion_esta_activo( 'blackweek2023') ) include ('includes/banner_promocion.php'); ?>
+	<?php if ( programacion_esta_activo( 'cybermonday2023') ) include ('includes/banner_promocion_ciber.php'); ?>
+	<div class="newhome-imagen-fondo">
+		<div class="entradilla_izq">
+			<h1>Reformas sin obras con<br>SMARTCRET</h1>
+			<p class="p_entradilla"><strong><span class="verde">SMARTCRET Do It Yourself</span></strong> es la revolución del mundo de la decoración. Es un producto diseñado para hacer una reforma sin obras y de manera económica, rápida y divertida.<br><strong><span class="verde">¡Y haciéndolo tú mismo!</span></strong></p>
+			<p class="p_entradilla_2">En Smartcret te ponemos las cosas fáciles porque sabemos el mundo no debería ser tan complicado.<br>Descubre todo lo que hemos diseñado para ti y comienza tu reforma sin obras con Smartcret.</p>
+		</div>
+	</div>
+	<div class="divisor"></div>
+
+	<section class="iconos">
+		<div class="row">
+			<h2>Beneficios de una reforma sin obras:</h2>
+			<div class="col-md-4">
+				<h3>Reforma rápida</h3>
+				<p class="p_icono">Realizar una reforma tú mismo y sin necesidad de eliminar el material existente en la superficie no es una ventaja, es una ventajaza. Esto se traduce en mucho menos tiempo de reforma. En solo unas horas o unos días puedes tener lista una reforma que con otro material y medios duraría semanas e incluso meses.</p>
+			</div>
+			<div class="col-md-4">
+				<h3>Reforma limpia</h3>
+				<p class="p_icono">La facilidad de poder aplicar encima de los materiales existentes en las superficies que queremos renovar hacen que no se generen escombros y, por tanto, tengamos una reforma limpia. Así, decimos adiós a uno de los aspectos más temidos a la hora de reformar nuestras casas.</p>
+			</div>
+			<div class="col-md-4">
+				<h3>Reforma económica</h3>
+				<p class="p_icono">Realizar una reforma con Smartcret es mucho más barato que cualquier reforma convencional: se necesitan menos horas de trabajo, la mano de obra eres tú mismo y, al no tener que quitar los materiales existentes, se ahorra mucho dinero y tiempo.</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<h3>Reforma no intrusiva</h3>
+				<p class="p_icono">Es una reforma sin escombros. lo que se traduce en realizar una reforma libre de polvo. Por eso, no es necesario cambiar tu rutina y mudarte por un tiempo a vivir a otro sitio. Las reformas con Smartcret te permiten conntinua con tus hábitos y, además, con la tranquilidad de no tener profesionales trabajando en tu casa. Porque esta reformas sin obras la haces tú mismo.</p>
+			</div>
+			<div class="col-md-4">
+				<h3>Reforma de alta calidad</h3>
+				<p class="p_icono">Las reformas sin obras no tienen nada que envidiar a las reformas convencionales. Ofrecen muchos beneficios estéticos y, además, de alta calidad. Proporcionan un resultado muy bueno que no deja indiferente a nadie.</p>
+			</div>
+			<div class="col-md-4">
+				<h3>Reforma en cualquier espacio</h3>
+				<p class="p_icono">Las reformas sin obras con Smartcret son tan versátiles que se adaptan a cualquier espacio y superficie. Se pueden realizar en cualquier lugar que imagines: baños, cocinas, salones, habitaciones, paredes o suelos e incluso en interiores y exteriores.</p>
+			</div>
+		</div>
+	</section>
+
+	<div class="sep40"></div>
+
+	<div class="container video">
+		<section class="you_video">
+			<div class="video-responsive">
+				<iframe
+				src="https://www.youtube.com/embed/tqDJY9-bto8?rel=0"
+				title="YouTube video player"
+				frameborder="0"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+				allowfullscreen>
+				</iframe>
+			</div>
+		</section>
+	</div>
+	<div class="sep100"></div>
+
+	<section>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<a href="reformas-diy" rel="nofollow">
+						<img class="social_media" src="assets/img/smart_stories.webp" alt="Logo smartcret">
+					</a>
+				</div>
+				<div class="col-md-6 txt_diy">
+					<h2 style="text-align: left;">Reformas sin obras con SMARTCRET: inspírate y renueva tu hogar</h2>
+
+					<p>Las reformas tradicionales se han quedado igual que tu casa, ¡anticuadas! Tu hogar necesita un lavado de cara en toda regla y tú no estás por la labor (o no puedes permitírtelo) de contratar una empresa con todo lo que implica. ¡Ellos tampoco lo estaban! Han encontrado en las reformas sin obras con Smartcret la solución.</p>
+
+					<p>Te enseñamos vídeos reales del antes y el después de reformar sin obras diferentes estancias de la casa con nuestros productos. Cocinas, baños, habitaciones, suelos, paredes, chimeneas... Transformaciones radicales, efectivas y totalmente <span class="hashtag">#</span><span class="hash_real">real</span><span class="hash_diy">DIY</span> en cuestión de días.</p>
+
+					<p>Mejorarás, y mucho, el aspecto de tu vivienda por menos de lo que imaginas. Consigue el hogar que quieres y mereces sin que las obras y el presupuesto te limiten. ¿Estás preparado para convertirte en amante de las reformas sin obras y DIY?
+					</p>
+			</div>
+			</div>
+		</div>
+	</section>
+
+	<div class="sep50"></div>
+
+		<section>
+		<div class="container img-circ">
+			<div class="row">
+				<h2>Nuestros productos para una reforma sin obras</h2>
+				<div class="sep10"></div>
+				<p class="verde" style="text-align:center;padding-right: 0;padding-left: 0;">Diseñamos productos que permiten realizar una reforma sin obras de manera rápida, divertida y por mucho menos dinero que una reforma habitual.</p>
+				<p class="verde" style="text-align:center;">¿Qué prefieres?</p>
+			</div>
+			<div class="sep20"></div>
+			<div class="row">
+				<div class="col-md-4 center">
+					<img class="circ_home" src="assets/img/microcemento.avif" alt="Microcemento listo al uso" title="Microcemento listo al uso" style="display: block;margin-left: auto;margin-right: auto;margin-bottom: 3%;" width="304" height="304">
+					<a class="microcemento_cta" href="microcemento-listo-al-uso" alt="Microcemento listo al uso" title="Microcemento listo al uso"><h3>Microcemento listo al uso</h3></a>
+				</div>
+				<div class="col-md-4 center">
+					<img class="circ_home" src="assets/img/pintura_azulejos.avif" alt="Pintura para azulejos" title="Pintura para azulejos" style="display: block;margin-left: auto;margin-right: auto;margin-bottom: 3%;" width="304" height="304">
+					<a class="pintura_cta" href="pintura-azulejos-smartcover" alt="Pintura para azulejos" title="Pintura para azulejos"><h3>Pintura para azulejos</h3></a>
+				</div>
+				<div class="col-md-4 center">
+					<img class="circ_home" src="assets/img/hormigon-impreso.avif" alt="Hormigón impreso" title="Hormigón impreso" style="display: block;margin-left: auto;margin-right: auto;margin-bottom: 3%;" width="304" height="304">
+					<a class="pintura_cta" href="hormigon-impreso" alt="Hormigón impreso" title="Hormigón impreso"><h3>Hormigón impreso</h3></a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<div class="sep30"></div>
+
+	<section class="newsletter">
+		<div class="container">
+			<div class="row">
+				<h2>SUSCRÍBETE A NUESTRA NEWSLETTER</h2>
+				<div class="col-md-12 col-lg-4 col-xl-6">
+					<p>Suscríbete ya a nuestra newsletter y recibirás información de todas nuestras ofertas, consejos de decoración y aplicación y un largo etcétera.</p>
+					<p>Nuevos posts, ofertas especiales, eventos… Entérate antes que nadie de todas nuestras novedades para imaginar, crear y estrenar.</p>
+				</div>
+				<div class="col-md-12 col-lg-8 col-xl-6">
+					<form class="form-inline" action="newsletter-gracias.php" method="post">
+						<div class="row">
+							<div class="form-group col-md-4">
+								<label for="nombre">Nombre:</label>
+								<input class="form-control" type="text" id="nombre" name="nombre" required>
+							</div>
+							<div class="form-group col-md-4">
+								<label for="email">Email:</label>
+								<input class="form-control" type="text" id="email" name="email" required>
+							</div>
+							<div class="form-group col-md-4">
+								<label for="fecha">Fecha nacimiento:</label>
+								<input class="form-control" type="text" id="fecha" name="fecha" placeholder="dd/mm/yyyy" required>
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group col-md-12">
+								<input class="submit_newsletter centrar" type="submit" value="Suscribirme">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="home_testimonios">
+		<div class="logo_testimonios">
+			<img loading="lazy" src="assets/img/smartxperience.png" alt="SmartXperience" title="SmartXperience" height="164" width="445" class="logo_testimonios"></div>
+			<p class="p_logo_testimonios">Testimonios de nuestros clientes</p>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<img loading="lazy" src="assets/img/testimonios/enric.png" alt="Enric Yagüe" title="Enric Yagüe" height="auto" width="auto" class="img_testimonios">
+				<p class="p_testimonio">Puedo asegurar que Smartcret es la solución para los "manitas" que se lanzan a la aventura. Siguiendo todos los pasos de la guía de aplicación me ha quedado fantástico.</p>
+				<p class="p_logo_testimonios"><img loading="lazy" src="assets/img/testimonios/5estrellas.png" alt="5stars" title="" height="auto" width="auto"></p>
+				<p class="nombre_testimonio">Enric Yagüe</br>(Valencia)</p>
+			</div>
+			<div class="col-md-4">
+				<img loading="lazy" src="assets/img/testimonios/patricia.png" alt="Patricia Hernandez" title="Patricia Hernandez" height="auto" width="auto" class="img_testimonios">
+				<p class="p_testimonio">Sin ser una manitas, pero siguiendo las instrucciones del fabricante, he podido renovar el baño de mi casa por muy poco dinero.</p>
+				<p class="p_logo_testimonios"><img loading="lazy" src="assets/img/testimonios/5estrellas.png" alt="5stars" title="" height="auto" width="auto"></p>
+				<p class="nombre_testimonio">Patricia Hernandez</br>(Madrid)</p>
+			</div>
+			<div class="col-md-4">
+				<img loading="lazy" src="assets/img/testimonios/fede.png" alt="Fede Siscar" title="Fede Siscar" height="auto" width="auto" class="img_testimonios">
+				<p class="p_testimonio">Fantástico, este material es extraordinariamente fácil de aplicar y rápido en secarse. Un material perfecto para no complicarte con obras caras.</p>
+				<p class="p_logo_testimonios"><img loading="lazy" src="assets/img/testimonios/5estrellas.png" alt="5stars" title="" height="auto" width="auto"></p>
+				<p class="nombre_testimonio">Fede Siscar</br>(Valencia)</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Footer - Inicio -->
+	<?php include('includes/footer.php'); ?>
+	<!-- Footer - Fin -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+	<script type="text/javascript" src="cookies/jquery.ihavecookies.js"></script>
+    <script type="text/javascript">
+    var options = {
+        title: '&#x1F36A; Mmmhhh... ¿Quieres galletas?',
+        message: 'Sabemos que te da igual, pero nos obligan a decirte que utilizamos cookies y todas esas cosas para personalizar la publi y los contenidos que ves y blablabla. Puedes informarte sobre esto o hacer clic para deshacerte de esta caja molesta y seguir con lo tuyo.',
+        delay: 600,
+        expires: 1,
+        onAccept: function(){
+            var myPreferences = $.fn.ihavecookies.cookie();
+            console.log('Yay! The following preferences were saved...');
+            console.log(myPreferences);
+        },
+        uncheckBoxes: true,
+        acceptBtnLabel: 'Vale, sí. ¡Déjame vivir!',
+        moreInfoLabel: 'Más información',
+        cookieTypesTitle: 'Selecciona las cookies que quieres aceptar',
+        fixedCookieTypeLabel: 'Esenciales',
+        fixedCookieTypeDesc: 'estas son las cookies esenciales para que la web funcione correctamente'
+    }
+
+    $(document).ready(function() {
+        $('body').ihavecookies(options);
+
+        if ($.fn.ihavecookies.preference('marketing') === true) {
+            console.log('This should run because marketing is accepted.');
+        }
+
+        $('#ihavecookiesBtn').on('click', function(){
+            $('body').ihavecookies(options, 'reinit');
+        });
+        $('a.nav-link.active').removeClass('active');
+    });
+
+    $('.external-url').on('click', function (e) {
+	  	const url = this.href
+		  e.preventDefault()
+		  myCustomEvent(function() {
+		    window.location = url
+		  });
+		});
+
+		function myCustomEvent(fn) {
+		  setTimeout(function() {
+		    console.log('Execute custom JS before firing navigation...');
+		    fn();
+		  }, 3000);
+		}
+
+    </script>
+	<!--<script data-id='xenioo' data-node='app' src="https://static.xenioo.com/webchat/xenioowebchat.js"></script>-->
+	<script>
+		/*xenioowebchat.Start("1f7d74f5-de9c-4b88-8dd1-6206b99e8c7b");*/
+	</script>
+	<?php include('./includes/schema/home.php'); ?>
+	</body>
+</html>
+
